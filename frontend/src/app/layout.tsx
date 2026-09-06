@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ACI Air",
-  description: "Travel Agency platform for ACI Air",
+  description: "Travel Agency Portal",
   icons: {
     icon: "/logo.jpg",
   },

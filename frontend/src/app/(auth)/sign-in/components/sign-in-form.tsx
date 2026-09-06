@@ -43,7 +43,7 @@ export function SignInForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="sign-in-form flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
         <Input
