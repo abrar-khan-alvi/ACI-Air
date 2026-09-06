@@ -26,7 +26,7 @@ export default function AuthLayout({
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 relative z-10 w-full mt-20">
+      <main className="flex-1 flex flex-col justify-center items-center p-4 pt-24 sm:p-6 sm:pt-28 lg:p-8 lg:pt-32 relative z-10 w-full">
         {children}
       </main>
     </div>
