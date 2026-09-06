@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, Upload, File, X, Check } from "lucide-react";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { CountryDropdown } from "@/components/ui/country-dropdown";
 import { useRouter } from "next/navigation";
 
 // --- Schemas ---
@@ -180,14 +181,20 @@ export function RegistrationForm() {
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="country" className="text-slate-700 font-semibold ml-1">Country/Region <span className="text-red-500">*</span></Label>
-                <Select id="country" {...partnerForm.register("country")} aria-invalid={!!partnerForm.formState.errors.country}>
-                  <option value="">Select a country</option>
-                  <option value="Bangladesh">Bangladesh</option>
-                  <option value="United States">United States</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="Australia">Australia</option>
-                  <option value="India">India</option>
-                </Select>
+                <Controller
+                  control={partnerForm.control}
+                  name="country"
+                  render={({ field }) => (
+                    <CountryDropdown
+                      placeholder="Select a country"
+                      defaultValue={field.value}
+                      onChange={(country) => {
+                        field.onChange(country.name);
+                      }}
+                      aria-invalid={!!partnerForm.formState.errors.country}
+                    />
+                  )}
+                />
                 {partnerForm.formState.errors.country && <span className="text-xs text-red-500 ml-1 font-medium">{partnerForm.formState.errors.country.message}</span>}
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
