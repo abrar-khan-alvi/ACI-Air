@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import {
   Plane,
   Hotel,
@@ -66,11 +67,12 @@ export function HeroSearch() {
   return (
     <section className="pb-4">
       <div className="relative flex min-h-[240px] flex-col overflow-visible rounded-2xl shadow-card sm:min-h-[270px]">
-        <img
+        <Image
           src={heroImg}
           alt="Aircraft wing above emerald islands and turquoise lagoons"
-          width={1920}
-          height={1088}
+          fill
+          priority
+          sizes="(max-width: 1360px) 100vw, 1360px"
           className="absolute inset-0 size-full rounded-2xl object-cover"
         />
         <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(100deg,oklch(0.22_0.06_160/0.88)_0%,oklch(0.26_0.07_160/0.62)_48%,oklch(0.3_0.06_180/0.12)_100%)]" />

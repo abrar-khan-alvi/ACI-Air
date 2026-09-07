@@ -4,12 +4,12 @@ This document provides guidance for AI coding assistants working in this reposit
 
 ## Project Overview
 
-This is a **TanStack Start** SSR application (not Next.js). Key facts:
+This is a **Next.js App Router** SSR application. Key facts:
 
 - **Package manager**: Bun (`bun.lock` is the lockfile). Always use `bun install`, `bun run dev`, etc.
-- **Framework**: TanStack Start + TanStack Router (file-based routing in `src/routes/`)
+- **Framework**: Next.js App Router (file-based routing in `app/`)
 - **Language**: TypeScript (strict mode — see `tsconfig.json`)
-- **Styling**: Tailwind CSS v4 (configured via `@tailwindcss/vite` plugin)
+- **Styling**: Tailwind CSS v4 (configured via `@tailwindcss/postcss`)
 - **UI library**: Radix UI primitives wrapped in shadcn/ui-style components (`src/components/ui/`)
 - **Business components**: `src/components/aci/` — do not rename or restructure these without strong reason
 
@@ -29,21 +29,24 @@ This is a **TanStack Start** SSR application (not Next.js). Key facts:
 ## Project Structure
 
 ```
+app/                 # Next.js layouts, pages, metadata, and error boundaries
+├── layout.tsx
+├── page.tsx
+├── search/page.tsx
+├── booking/page.tsx
+├── hotels/page.tsx
+└── user/page.tsx
 src/
 ├── components/
 │   ├── aci/        # Application-specific business components
 │   └── ui/         # Reusable UI primitives (shadcn/ui pattern)
 ├── hooks/          # Custom React hooks
 ├── lib/            # Utilities, server functions, data helpers
-├── routes/         # TanStack Router file-based routes
-│   ├── __root.tsx  # Root layout, error boundary, metadata
-│   ├── index.tsx   # Homepage
-│   ├── search.tsx  # Flight search results
-│   ├── booking.tsx # Flight booking flow
-│   ├── hotels.tsx  # Hotel search and results
-│   └── user.tsx    # User profile
-├── router.tsx      # TanStack Router + QueryClient setup
-├── server.ts       # SSR server entry (wraps TanStack Start server)
-├── start.ts        # TanStack Start instance + middleware
+├── routes/         # Interactive full-page view components used by app/ routes
+│   ├── index.tsx
+│   ├── search.tsx
+│   ├── booking.tsx
+│   ├── hotels.tsx
+│   └── user.tsx
 └── styles.css      # Global Tailwind CSS
 ```

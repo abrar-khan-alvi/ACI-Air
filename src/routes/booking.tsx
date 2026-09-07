@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import Image from "next/image";
+import { Link } from "@/components/navigation";
 
 import {
   ArrowLeft,
@@ -30,27 +33,7 @@ import { paxLabel, type Pax } from "@/lib/flight-results";
 import { fareBreakdown, flightFacts, mealFor, money } from "@/lib/fare-details";
 import { scanPassportLocally } from "@/lib/passport-ocr";
 import { cn } from "@/lib/utils";
-
-const title = "Complete your booking — ACI Air";
-const description =
-  "Add traveller details, choose seats, baggage and meals, then confirm your ACI Air flight booking with secure checkout.";
-
-export const Route = createFileRoute("/booking")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    ref: typeof s["ref"] === "string" ? s["ref"] : "",
-  }),
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: BookingPage,
-});
+import { PublicNavbar } from "@/components/aci/PublicNavbar";
 
 type Draft = { legs: ItineraryLeg[]; pax: Pax; cabin: string };
 
@@ -113,8 +96,14 @@ const extras = [
 
 const steps = ["Travellers", "Extras", "Review & pay"];
 
-function BookingPage() {
-  const { ref } = Route.useSearch();
+export default function BookingPage({
+  bookingRef,
+  isAuthenticated = false,
+}: {
+  bookingRef: string;
+  isAuthenticated?: boolean;
+}) {
+  const ref = bookingRef;
   const [draft, setDraft] = useState<Draft | null>(null);
   const [ready, setReady] = useState(false);
   const [step, setStep] = useState(0);
@@ -123,6 +112,7 @@ function BookingPage() {
   const [travellers, setTravellers] = useState<Traveller[]>([]);
   const [done, setDone] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- this effect hydrates browser-only sessionStorage */
   useEffect(() => {
     try {
       const raw = ref ? sessionStorage.getItem(ref) : null;
@@ -141,6 +131,7 @@ function BookingPage() {
     }
     setReady(true);
   }, [ref]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const legs = draft?.legs ?? [];
   const pax = draft?.pax ?? { adults: 1, children: 0, infants: 0 };
@@ -194,31 +185,7 @@ function BookingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="glass-bar sticky top-0 z-40 border-b border-border/60">
-        <div className="mx-auto flex max-w-[1180px] items-center gap-3 px-3 py-2.5 sm:px-5">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-xl bg-lagoon shadow-soft">
-              <Plane className="size-4 text-primary-foreground" strokeWidth={2} />
-            </span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-[14px] font-semibold">ACI Air</span>
-              <span className="block text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Secure booking
-              </span>
-            </span>
-          </Link>
-          <button
-            type="button"
-            onClick={() => (step ? setStep(step - 1) : window.history.back())}
-            className="ml-1 flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-semibold text-muted-foreground transition hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" /> Back
-          </button>
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/70 px-2.5 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
-            <Lock className="size-3 text-primary" /> 256-bit secure
-          </span>
-        </div>
-      </header>
+      <PublicNavbar isAuthenticated={isAuthenticated} />
 
       <main className="mx-auto max-w-[1180px] px-3 py-6 sm:px-5">
         <h1 className="font-display text-[22px] font-bold leading-tight sm:text-[26px]">
@@ -723,7 +690,14 @@ function TravellerCard({
         <div className="flex flex-col gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-3.5 sm:flex-row sm:items-center">
           <span className="relative grid h-14 w-20 shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-card">
             {traveller.scan ? (
-              <img src={traveller.scan} alt="" className="h-full w-full object-cover" />
+              <Image
+                src={traveller.scan}
+                alt=""
+                fill
+                unoptimized
+                sizes="80px"
+                className="object-cover"
+              />
             ) : (
               <Camera className="size-4 text-muted-foreground" />
             )}

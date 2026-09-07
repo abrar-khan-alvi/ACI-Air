@@ -1,17 +1,14 @@
 # ACI Avionics — B2B Travel Portal
 
-A B2B travel booking portal for flights and hotels, built with TanStack Start (SSR), TypeScript, React, and Tailwind CSS.
+A B2B travel booking portal for flights and hotels, built with Next.js App Router, TypeScript, React, and Tailwind CSS.
 
 ## Tech Stack
 
-- [TanStack Start](https://tanstack.com/start) — SSR framework
-- [TanStack Router](https://tanstack.com/router) — type-safe file-based routing
-- [TanStack Query](https://tanstack.com/query) — data fetching and caching
+- [Next.js](https://nextjs.org) — App Router, server rendering, and route architecture
 - [React 19](https://react.dev)
 - [TypeScript](https://www.typescriptlang.org)
 - [Tailwind CSS v4](https://tailwindcss.com)
 - [Radix UI](https://www.radix-ui.com) — accessible UI primitives (shadcn/ui pattern)
-- [Vite](https://vite.dev) — build tool
 - [Bun](https://bun.sh) — package manager
 
 ## Development
@@ -31,26 +28,29 @@ bun install
 bun run dev
 ```
 
-The development server starts at **http://localhost:8080**.
+The development server starts at **http://localhost:3000**.
 
 ## Available Scripts
 
-| Command           | Description                  |
-| ----------------- | ---------------------------- |
-| `bun run dev`     | Start the development server |
-| `bun run build`   | Build for production         |
-| `bun run preview` | Preview the production build |
-| `bun run lint`    | Run ESLint                   |
-| `bun run format`  | Format code with Prettier    |
+| Command             | Description                  |
+| ------------------- | ---------------------------- |
+| `bun run dev`       | Start the development server |
+| `bun run build`     | Build for production         |
+| `bun run start`     | Start the production build   |
+| `bun run test`      | Run the Vitest suite         |
+| `bun run typecheck` | Run TypeScript checks        |
+| `bun run lint`      | Run ESLint                   |
+| `bun run format`    | Format code with Prettier    |
 
-## Environment Variables
+Passport OCR runs locally in the browser; passport images are not uploaded by the application.
 
-| Variable     | Required | Description                                                                  |
-| ------------ | -------- | ---------------------------------------------------------------------------- |
-| `AI_API_KEY` | Optional | API key for the AI-powered passport OCR scanning feature in the booking flow |
+## Demo authentication
 
-Create a `.env` file at the project root to set these locally:
+Use the built-in partner account to preview the protected dashboard:
 
-```sh
-AI_API_KEY=your_key_here
-```
+- Email: `test@mail.com`
+- Password: `123456`
+
+For deployed environments, set `AUTH_SECRET`, `DEMO_AUTH_EMAIL`, and
+`DEMO_AUTH_PASSWORD`. The demo session is stored in a signed, HTTP-only cookie and
+expires after eight hours.

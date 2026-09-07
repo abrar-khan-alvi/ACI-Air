@@ -1,4 +1,4 @@
-import { Bell, Search, Globe, Menu } from "lucide-react";
+import { Bell, Search, Globe, LogOut, Menu } from "lucide-react";
 
 export function Topbar({ onMenu }: { onMenu: () => void }) {
   return (
@@ -36,6 +36,17 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
             <p className="text-[9px] text-muted-foreground">Gold member</p>
           </div>
         </div>
+        <form action="/api/auth/sign-out" method="post">
+          <button
+            type="submit"
+            title="Sign out"
+            aria-label="Sign out"
+            className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground/70 transition hover:border-primary/40 hover:text-primary"
+          >
+            <LogOut className="size-4" />
+            <span className="hidden xl:inline">Log out</span>
+          </button>
+        </form>
       </div>
     </header>
   );

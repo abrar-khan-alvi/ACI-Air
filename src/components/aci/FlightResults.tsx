@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowRight,
   Ban,
@@ -103,8 +103,6 @@ export function FlightResults({
   const [detailTab, setDetailTab] = useState<"breakdown" | "rules">("breakdown");
   const [selected, setSelected] = useState<string | null>(null);
   const [booking, setBooking] = useState<Fare | null>(null);
-
-  useEffect(() => setBudget(maxPrice), [maxPrice]);
 
   const airlineList = useMemo(() => {
     const map = new Map<string, number>();

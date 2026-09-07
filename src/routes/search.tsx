@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@/components/navigation";
 import {
   ArrowLeft,
   CalendarDays,
@@ -15,6 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import { FlightResults } from "@/components/aci/FlightResults";
+import { PublicNavbar } from "@/components/aci/PublicNavbar";
 import { MergedFlightResults } from "@/components/aci/MergedFlightResults";
 import { FlightSearchForm, type Segment } from "@/components/aci/FlightSearchForm";
 import { cn } from "@/lib/utils";
@@ -26,29 +29,16 @@ import {
   paxFromParams,
   prettyDate,
   validateFlightSearch,
+  type FlightSearchParams,
 } from "@/lib/search-params";
 
-const title = "Flight search results — ACI Air";
-const description =
-  "Compare live-style fares, filter by stops, airline, departure time and budget, and pick the best flight for your trip with ACI Air.";
-
-export const Route = createFileRoute("/search")({
-  validateSearch: validateFlightSearch,
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: SearchPage,
-});
-
-function SearchPage() {
-  const params = Route.useSearch();
+export default function SearchPage({
+  params,
+  isAuthenticated = false,
+}: {
+  params: FlightSearchParams;
+  isAuthenticated?: boolean;
+}) {
   const navigate = useNavigate();
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -59,8 +49,6 @@ function SearchPage() {
   const key = `${params.legs}|${params.adults}|${params.children}|${params.infants}|${params.cabin}`;
 
   useEffect(() => {
-    setLoading(true);
-    setEdit(false);
     const t = setTimeout(() => setLoading(false), 650);
     return () => clearTimeout(t);
   }, [key]);
@@ -100,37 +88,7 @@ function SearchPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="glass-bar sticky top-0 z-40 border-b border-border/60">
-        <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-3 py-2.5 sm:px-5">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-xl bg-lagoon shadow-soft">
-              <Plane className="size-4 text-primary-foreground" strokeWidth={2} />
-            </span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-[14px] font-semibold">ACI Air</span>
-              <span className="block text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Flight search
-              </span>
-            </span>
-          </Link>
-
-          <Link
-            to="/"
-            className="ml-1 flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-semibold text-muted-foreground transition hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" /> Home
-          </Link>
-
-          <div className="ml-auto flex items-center gap-2">
-            <span className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-foreground/80 md:flex">
-              <Globe className="size-3.5 text-primary" /> BDT · EN
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/70 px-2.5 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              <Sparkles className="size-3 text-primary" /> Live fare compare
-            </span>
-          </div>
-        </div>
-      </header>
+      <PublicNavbar isAuthenticated={isAuthenticated} />
 
       <div className="border-b border-border/60 bg-card">
         <div className="mx-auto max-w-[1240px] px-3 py-3 sm:px-5">

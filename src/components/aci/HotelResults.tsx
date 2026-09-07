@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import {
   BedDouble,
   Check,
@@ -123,12 +124,11 @@ function HotelCard({
     <article className="surface-card overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition hover:shadow-float">
       <div className="flex flex-col gap-0 sm:flex-row">
         <div className="relative h-44 shrink-0 sm:h-auto sm:w-56">
-          <img
-            src={images[hotel.imageIndex]}
+          <Image
+            src={images[hotel.imageIndex]!}
             alt={`${hotel.name} in ${hotel.city}`}
-            width={1024}
-            height={768}
-            loading="lazy"
+            fill
+            sizes="(max-width: 639px) 100vw, 224px"
             className="size-full object-cover"
           />
           {hotel.badge ? (

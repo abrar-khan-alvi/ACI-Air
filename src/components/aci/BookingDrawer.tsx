@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@/components/navigation";
 import {
   ArrowRight,
   Ban,

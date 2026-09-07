@@ -1,5 +1,6 @@
+"use client";
+
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { Sidebar } from "@/components/aci/Sidebar";
 import { Topbar } from "@/components/aci/Topbar";
 import { HeroSearch } from "@/components/aci/HeroSearch";
@@ -8,29 +9,11 @@ import { Offers } from "@/components/aci/Offers";
 import { Services } from "@/components/aci/Services";
 import { RightRail } from "@/components/aci/RightRail";
 
-const title = "User Homepage — ACI Air";
-const description =
-  "Your personal ACI Air travel dashboard. Search flights, hotels, eSIM and insurance, track trips, bookings, and Green Miles rewards.";
-
-export const Route = createFileRoute("/user")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: UserHomepage,
-});
-
-function UserHomepage() {
+export default function UserHomepage() {
   const [menu, setMenu] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="dashboard-enter flex min-h-screen bg-background">
       <Sidebar open={menu} onClose={() => setMenu(false)} />
       <div className="min-w-0 flex-1">
         <Topbar onMenu={() => setMenu(true)} />

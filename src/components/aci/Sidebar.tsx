@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "@/components/aci/PublicNavbar";
 
 export const primary = [
   { label: "Explore", icon: LayoutGrid },
@@ -57,17 +58,7 @@ function Nav({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <div className="flex items-center gap-2.5 px-1">
-        <div className="grid size-8 place-items-center rounded-xl bg-lagoon shadow-soft">
-          <Plane className="size-4 text-primary-foreground" strokeWidth={2} />
-        </div>
-        <div className="leading-tight">
-          <p className="font-display text-[15px] font-semibold text-sidebar-accent-foreground">
-            ACI Air
-          </p>
-          <p className="text-[9px] uppercase tracking-[0.18em] text-sidebar-foreground/50">
-            Travel Suite
-          </p>
-        </div>
+        <BrandLogo />
       </div>
 
       <nav className="mt-6 space-y-0.5">

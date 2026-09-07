@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@/components/navigation";
 import { CalendarDays, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { destinationById, nightsBetween, type Guests, type HotelDestination } from "@/lib/hotels";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@/components/navigation";
 import { ArrowLeftRight, CalendarDays, Plane, Plus, Search, X } from "lucide-react";
 import { placeByCode, type Place } from "@/lib/airports";
 import { cn } from "@/lib/utils";

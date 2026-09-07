@@ -22,7 +22,7 @@ import {
   scoreMrz,
   type MrzParseResult,
 } from "./passport-mrz";
-import type { PassportScanResult } from "./passport.functions";
+import type { PassportScanResult } from "./passport-types";
 
 // ---------------------------------------------------------------------------
 // Image Quality & Preprocessing

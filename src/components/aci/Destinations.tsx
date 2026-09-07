@@ -3,6 +3,7 @@ import dubai from "@/assets/dest-dubai.jpg";
 import singapore from "@/assets/dest-singapore.jpg";
 import maldives from "@/assets/dest-maldives.jpg";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import { SectionHeader } from "./SectionHeader";
 
 const destinations = [
@@ -32,12 +33,11 @@ export function Destinations() {
             key={d.city}
             className="lift group relative h-40 overflow-hidden rounded-xl shadow-soft sm:h-48"
           >
-            <img
+            <Image
               src={d.img}
               alt={`${d.city}, ${d.country}`}
-              width={800}
-              height={1000}
-              loading="lazy"
+              fill
+              sizes="(max-width: 1279px) 50vw, 25vw"
               className="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.2_0.05_160/0.9)_0%,oklch(0.2_0.05_160/0.2)_55%,transparent_100%)]" />

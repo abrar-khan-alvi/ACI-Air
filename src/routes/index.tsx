@@ -1,4 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+"use client";
+
+import Image from "next/image";
+import { Link } from "@/components/navigation";
 import {
   Plane,
   ArrowRight,
@@ -20,29 +23,12 @@ import { HeroSearch } from "@/components/aci/HeroSearch";
 import { Destinations } from "@/components/aci/Destinations";
 import { Offers } from "@/components/aci/Offers";
 import { Services } from "@/components/aci/Services";
+import { PublicNavbar } from "@/components/aci/PublicNavbar";
 import { cn } from "@/lib/utils";
-
-const title = "ACI Air — Book Flights, Hotels, eSIM & Travel Insurance";
-const description =
-  "ACI Air is a premium online travel agency for flights, hotels, eSIM, insurance, and curated destinations.";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: MainHomepage,
-});
 
 const navLinks = [
   { label: "Flights", to: "/search", icon: Plane },
-  { label: "Hotels", to: "/", icon: Hotel },
+  { label: "Hotels", to: "/hotels", icon: Hotel },
   { label: "eSIM", to: "/", icon: Signal },
   { label: "Insurance", to: "/", icon: ShieldCheck },
   { label: "Destinations", to: "/", icon: MapPin },
@@ -90,23 +76,23 @@ const testimonials = [
   },
 ];
 
-function MainHomepage() {
+export default function MainHomepage({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="glass-bar sticky top-0 z-40 border-b border-border/60 px-4 py-3 sm:px-6 lg:px-8">
+      <PublicNavbar isAuthenticated={isAuthenticated} />
+      <header className="hidden">
         <div className="mx-auto flex max-w-[1360px] items-center gap-3">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="grid size-9 place-items-center rounded-xl bg-lagoon shadow-soft">
-              <Plane className="size-4.5 text-primary-foreground" strokeWidth={2} />
-            </div>
-            <div className="leading-tight">
-              <p className="font-display text-[17px] font-semibold text-foreground">ACI Air</p>
-              <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Travel Suite
-              </p>
-            </div>
+            <Image
+              src="/logo.jpg"
+              alt="ACI Air"
+              width={1600}
+              height={1600}
+              priority
+              className="h-10 w-[132px] rounded-lg object-cover object-center shadow-soft"
+            />
           </Link>
 
           <nav className="ml-8 hidden items-center gap-1 lg:flex">
@@ -130,10 +116,10 @@ function MainHomepage() {
               <Phone className="size-3.5 text-primary" /> Support
             </a>
             <Link
-              to="/user"
+              to={isAuthenticated ? "/user" : "/sign-in"}
               className="flex items-center gap-1.5 rounded-full bg-forest px-4 py-2 text-[12px] font-semibold text-primary-foreground shadow-soft transition hover:shadow-card"
             >
-              My Dashboard <ArrowRight className="size-3.5" />
+              {isAuthenticated ? "My Dashboard" : "Sign in"} <ArrowRight className="size-3.5" />
             </Link>
           </div>
 
@@ -147,7 +133,7 @@ function MainHomepage() {
         </div>
       </header>
 
-      {mobileMenu ? (
+      {false && mobileMenu ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             aria-label="Close menu"
@@ -163,15 +149,13 @@ function MainHomepage() {
               <X className="size-4" />
             </button>
             <div className="mb-4 mt-8 flex items-center gap-2.5">
-              <div className="grid size-9 place-items-center rounded-xl bg-lagoon shadow-soft">
-                <Plane className="size-4.5 text-primary-foreground" strokeWidth={2} />
-              </div>
-              <div className="leading-tight">
-                <p className="font-display text-[16px] font-semibold text-foreground">ACI Air</p>
-                <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Travel Suite
-                </p>
-              </div>
+              <Image
+                src="/logo.jpg"
+                alt="ACI Air"
+                width={1600}
+                height={1600}
+                className="h-10 w-[132px] rounded-lg object-cover object-center shadow-soft"
+              />
             </div>
             {navLinks.map((link) => (
               <Link
@@ -186,11 +170,11 @@ function MainHomepage() {
             ))}
             <div className="mt-auto flex flex-col gap-2 border-t border-border pt-4">
               <Link
-                to="/user"
+                to={isAuthenticated ? "/user" : "/sign-in"}
                 onClick={() => setMobileMenu(false)}
                 className="flex items-center justify-center gap-1.5 rounded-xl bg-forest py-2.5 text-[13px] font-semibold text-primary-foreground"
               >
-                My Dashboard <ArrowRight className="size-4" />
+                {isAuthenticated ? "My Dashboard" : "Sign in"} <ArrowRight className="size-4" />
               </Link>
             </div>
           </aside>

@@ -1,5 +1,6 @@
 @import "tailwindcss" source(none);
 @source "../src";
+@source "../app";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -66,8 +67,19 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-clay: var(--clay);
-  --font-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Epilogue", ui-sans-serif, system-ui, sans-serif;
+  --color-aci-green-50: var(--aci-green-50);
+  --color-aci-green-100: var(--aci-green-100);
+  --color-aci-green-200: var(--aci-green-200);
+  --color-aci-green-400: var(--aci-green-400);
+  --color-aci-green-500: var(--aci-green-500);
+  --color-aci-green-600: var(--aci-green-600);
+  --color-aci-green-700: var(--aci-green-700);
+  --color-aci-green-800: var(--aci-green-800);
+  --color-aci-green-900: var(--aci-green-900);
+  --color-aci-green-950: var(--aci-green-950);
+  --color-aci-orange-500: var(--aci-orange-500);
+  --font-display: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-epilogue), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -93,6 +105,19 @@
   --gold: oklch(0.83 0.12 88);
   --gold-foreground: oklch(0.29 0.06 72);
   --clay: oklch(0.66 0.12 45);
+
+  /* Authentication palette carried over from the original portal. */
+  --aci-green-50: #effcf5;
+  --aci-green-100: #d8f7e6;
+  --aci-green-200: #afeecb;
+  --aci-green-400: #35c979;
+  --aci-green-500: #00a651;
+  --aci-green-600: #009548;
+  --aci-green-700: #008d4d;
+  --aci-green-800: #006a3c;
+  --aci-green-900: #004d2d;
+  --aci-green-950: #003b24;
+  --aci-orange-500: #f58220;
 
   --secondary: oklch(0.945 0.018 148);
   --secondary-foreground: oklch(0.32 0.045 152);
@@ -166,6 +191,12 @@
 }
 
 @layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   * {
     border-color: var(--color-border);
   }
@@ -174,6 +205,7 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -275,4 +307,123 @@
     opacity: 1;
     transform: none;
   }
+}
+
+@keyframes dashboard-enter {
+  from {
+    opacity: 0;
+    transform: translateX(42px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dashboard-enter {
+  animation: dashboard-enter 0.46s var(--ease-silk) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-enter {
+    animation: none;
+  }
+}
+
+/* Keep authentication actions visible on short laptop displays. */
+@media (max-height: 950px) {
+  .auth-header {
+    padding-block: 1rem;
+  }
+  .auth-main {
+    justify-content: flex-start;
+    padding-bottom: 0.75rem;
+  }
+  .registration-card,
+  .sign-in-card {
+    padding: 1.25rem 1.5rem;
+  }
+  .registration-card {
+    padding: 0.875rem 1.25rem;
+  }
+  .registration-heading,
+  .sign-in-heading {
+    margin-bottom: 0.75rem;
+  }
+  .registration-heading h1,
+  .sign-in-heading h1 {
+    margin-bottom: 0.125rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  .registration-heading p {
+    display: none;
+  }
+  .registration-form,
+  .registration-fields,
+  .registration-profile-form {
+    gap: 0.5rem;
+  }
+  .registration-stepper {
+    margin-bottom: 0;
+  }
+  .registration-stepper > div:not(.flex-1) {
+    gap: 0.25rem;
+  }
+  .registration-stepper > div:not(.flex-1) > div {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.625rem;
+    font-size: 0.875rem;
+  }
+  .registration-panel {
+    padding: 1rem 1.25rem;
+  }
+  .registration-profile-form > [role="alert"] {
+    padding: 0.5rem 0.75rem;
+  }
+  .registration-profile-form > [role="alert"] p:last-child {
+    display: none;
+  }
+  .registration-fields > div {
+    gap: 0.25rem;
+  }
+  .registration-fields input,
+  .registration-fields select,
+  .registration-fields button,
+  .registration-actions button,
+  .registration-review-actions button,
+  .sign-in-form input,
+  .sign-in-form > button {
+    height: 2.25rem !important;
+  }
+  .country-dropdown-list {
+    max-height: 7rem;
+  }
+  .registration-actions {
+    margin-top: 0 !important;
+  }
+  .sign-in-social {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .sign-in-social button {
+    height: 2.5rem;
+  }
+  .sign-in-divider {
+    margin-bottom: 1rem;
+  }
+  .sign-in-form {
+    gap: 0.75rem;
+  }
+  .sign-in-footer {
+    margin-top: 1rem;
+  }
+}
+
+/* Authentication pages are intentionally viewport-locked. The forms compact
+   through spacing only, preserving the regular application font sizing. */
+.auth-layout,
+.auth-main {
+  overscroll-behavior: none;
 }
