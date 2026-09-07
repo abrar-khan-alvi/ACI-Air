@@ -114,9 +114,9 @@
   }
 }
 
-/* Keep data-entry actions visible on common short desktop displays such as
-   1366 x 768, without shrinking mobile touch targets. */
-@media (min-width: 768px) and (max-height: 820px) {
+/* Keep data-entry actions visible on short displays, preventing scrolling 
+   by compactly rendering the form elements. */
+@media (max-height: 950px) {
   .auth-header {
     padding-block: 1rem;
   }
@@ -320,10 +320,8 @@
   }
 }
 
-/* A 1366 x 768 laptop typically leaves only ~600px of page height after the
-   browser chrome and taskbar. Use the available width to remove form rows,
-   while retaining dedicated vertical space for the brand mark. */
-@media (min-width: 1100px) and (max-height: 700px) {
+/* For wider screens that are short, optimize grid layout */
+@media (min-width: 1100px) and (max-height: 950px) {
   .registration-page {
     max-width: 1050px;
   }
@@ -365,3 +363,4 @@
     min-width: 0;
   }
 }
+
