@@ -40,7 +40,7 @@ export function Destinations() {
               sizes="(max-width: 1279px) 50vw, 25vw"
               className="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.2_0.05_160/0.9)_0%,oklch(0.2_0.05_160/0.2)_55%,transparent_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.2_0.05_273/0.9)_0%,oklch(0.2_0.05_273/0.2)_55%,transparent_100%)]" />
             <span className="absolute left-2.5 top-2.5 rounded-full bg-card/85 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-primary backdrop-blur">
               {d.tag}
             </span>
