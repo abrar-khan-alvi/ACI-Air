@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
           />
           <Button
             type="submit"
-            className="h-12 bg-aci-green-500 hover:bg-aci-green-700 text-white rounded-md font-medium transition-colors"
+            className="h-12 bg-aci-blue-500 hover:bg-aci-blue-700 text-white rounded-md font-medium transition-colors"
           >
             Send Reset Link
           </Button>
@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
           Remembered your password?{" "}
-          <Link href="/sign-in" className="text-aci-green-700 hover:text-aci-green-900 font-medium">
+          <Link href="/sign-in" className="text-aci-blue-700 hover:text-aci-blue-900 font-medium">
             Sign In
           </Link>
         </div>

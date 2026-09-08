@@ -4,7 +4,7 @@ export default function RegistrationSubmittedPage() {
   return (
     <div className="w-full max-w-[560px]">
       <div className="bg-card shadow-[0_16px_40px_rgb(0_59_36_/_12%)] rounded-2xl p-8 md:p-12 text-center">
-        <div className="w-16 h-16 bg-aci-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 bg-aci-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8 text-white"
@@ -22,7 +22,10 @@ export default function RegistrationSubmittedPage() {
         </p>
 
         <div className="mt-4">
-          <Link href="/sign-in" className="text-aci-green-700 hover:text-aci-green-900 font-medium">
+          <Link
+            href="/sign-in"
+            className="inline-flex items-center justify-center rounded-full bg-forest px-6 py-2.5 text-[13px] font-semibold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-card"
+          >
             Return to Sign In
           </Link>
         </div>

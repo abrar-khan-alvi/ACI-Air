@@ -108,17 +108,13 @@ export function SignInForm() {
       <div className="flex justify-end">
         <Link
           href="/forgot-password"
-          className="text-sm text-aci-green-700 hover:text-aci-green-900 font-medium"
+          className="text-sm text-aci-blue-700 hover:text-aci-blue-900 font-medium"
         >
           Forgot password?
         </Link>
       </div>
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-aci-green-500 hover:bg-aci-green-700 text-white h-12"
-      >
+      <Button type="submit" disabled={isLoading} className="w-full h-12 bg-forest text-primary-foreground shadow-soft transition-all hover:shadow-card hover:-translate-y-0.5 border-0">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Sign In
       </Button>

@@ -67,16 +67,16 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-clay: var(--clay);
-  --color-aci-green-50: var(--aci-green-50);
-  --color-aci-green-100: var(--aci-green-100);
-  --color-aci-green-200: var(--aci-green-200);
-  --color-aci-green-400: var(--aci-green-400);
-  --color-aci-green-500: var(--aci-green-500);
-  --color-aci-green-600: var(--aci-green-600);
-  --color-aci-green-700: var(--aci-green-700);
-  --color-aci-green-800: var(--aci-green-800);
-  --color-aci-green-900: var(--aci-green-900);
-  --color-aci-green-950: var(--aci-green-950);
+  --color-aci-blue-50: var(--aci-blue-50);
+  --color-aci-blue-100: var(--aci-blue-100);
+  --color-aci-blue-200: var(--aci-blue-200);
+  --color-aci-blue-400: var(--aci-blue-400);
+  --color-aci-blue-500: var(--aci-blue-500);
+  --color-aci-blue-600: var(--aci-blue-600);
+  --color-aci-blue-700: var(--aci-blue-700);
+  --color-aci-blue-800: var(--aci-blue-800);
+  --color-aci-blue-900: var(--aci-blue-900);
+  --color-aci-blue-950: var(--aci-blue-950);
   --color-aci-orange-500: var(--aci-orange-500);
   --font-display: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-epilogue), ui-sans-serif, system-ui, sans-serif;
@@ -94,10 +94,10 @@
   --popover-foreground: oklch(0.25 0.035 152);
 
   /* Forest & Moss */
-  --primary: oklch(0.41 0.07 152);
-  --primary-foreground: oklch(0.985 0.01 145);
-  --primary-deep: oklch(0.28 0.055 152);
-  --primary-glow: oklch(0.58 0.078 145);
+  --primary: oklch(0.303 0.093 273.764);
+  --primary-foreground: oklch(0.985 0.01 273.764);
+  --primary-deep: oklch(0.22 0.093 273.764);
+  --primary-glow: oklch(0.45 0.093 273.764);
 
   /* Complementary: soft moss + warm gold + clay */
   --teal: oklch(0.79 0.07 143);
@@ -107,16 +107,16 @@
   --clay: oklch(0.66 0.12 45);
 
   /* Authentication palette carried over from the original portal. */
-  --aci-green-50: #effcf5;
-  --aci-green-100: #d8f7e6;
-  --aci-green-200: #afeecb;
-  --aci-green-400: #35c979;
-  --aci-green-500: #00a651;
-  --aci-green-600: #009548;
-  --aci-green-700: #008d4d;
-  --aci-green-800: #006a3c;
-  --aci-green-900: #004d2d;
-  --aci-green-950: #003b24;
+  --aci-blue-50: #edf0f8;
+  --aci-blue-100: #dce1f1;
+  --aci-blue-200: #b9c3e3;
+  --aci-blue-400: #7387c7;
+  --aci-blue-500: #5069b9;
+  --aci-blue-600: #405494;
+  --aci-blue-700: #303f6f;
+  --aci-blue-800: #21285c;
+  --aci-blue-900: #1a204a;
+  --aci-blue-950: #10142e;
   --aci-orange-500: #f58220;
 
   --secondary: oklch(0.945 0.018 148);
@@ -129,25 +129,25 @@
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.912 0.012 148);
   --input: oklch(0.912 0.012 148);
-  --ring: oklch(0.52 0.075 150);
-  --chart-1: oklch(0.41 0.07 152);
+  --ring: oklch(0.303 0.093 273.764);
+  --chart-1: oklch(0.303 0.093 273.764);
   --chart-2: oklch(0.58 0.078 145);
   --chart-3: oklch(0.83 0.12 88);
   --chart-4: oklch(0.66 0.12 45);
   --chart-5: oklch(0.79 0.07 143);
 
   /* Light "Apple glass" sidebar */
-  --sidebar: oklch(0.985 0.008 155 / 0.72);
-  --sidebar-foreground: oklch(0.36 0.03 158);
-  --sidebar-primary: oklch(0.44 0.115 158);
-  --sidebar-primary-foreground: oklch(0.99 0.005 150);
+  --sidebar: oklch(0.985 0.008 273 / 0.72);
+  --sidebar-foreground: oklch(0.36 0.03 273);
+  --sidebar-primary: oklch(0.44 0.115 273);
+  --sidebar-primary-foreground: oklch(0.99 0.005 273);
   --sidebar-accent: oklch(1 0 0 / 0.85);
-  --sidebar-accent-foreground: oklch(0.28 0.06 158);
+  --sidebar-accent-foreground: oklch(0.28 0.06 273);
   --sidebar-border: oklch(1 0 0 / 0.6);
-  --sidebar-ring: oklch(0.55 0.11 158);
+  --sidebar-ring: oklch(0.55 0.11 273);
 
-  --gradient-forest: linear-gradient(135deg, oklch(0.3 0.055 152), oklch(0.47 0.075 148));
-  --gradient-lagoon: linear-gradient(135deg, oklch(0.41 0.07 152), oklch(0.62 0.08 143));
+  --gradient-forest: linear-gradient(135deg, oklch(0.3 0.093 273), oklch(0.47 0.1 270));
+  --gradient-lagoon: linear-gradient(135deg, oklch(0.41 0.093 273), oklch(0.62 0.1 265));
   --gradient-sun: linear-gradient(135deg, oklch(0.83 0.12 88), oklch(0.72 0.13 58));
   --shadow-soft: 0 1px 2px oklch(0.3 0.05 158 / 0.04), 0 6px 18px -12px oklch(0.3 0.05 158 / 0.16);
   --shadow-card: 0 1px 4px oklch(0.3 0.05 158 / 0.05), 0 16px 34px -22px oklch(0.3 0.05 158 / 0.28);

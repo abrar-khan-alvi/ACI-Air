@@ -75,7 +75,7 @@ export function HeroSearch() {
           sizes="(max-width: 1360px) 100vw, 1360px"
           className="absolute inset-0 size-full rounded-2xl object-cover"
         />
-        <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(100deg,oklch(0.22_0.06_160/0.88)_0%,oklch(0.26_0.07_160/0.62)_48%,oklch(0.3_0.06_180/0.12)_100%)]" />
+        <div className="absolute inset-0 rounded-2xl bg-hero-overlay" />
 
         <div className="relative flex flex-1 flex-col px-4 pt-5 pb-0 sm:px-9 sm:pt-7">
           <div className="pb-4 sm:pb-5">

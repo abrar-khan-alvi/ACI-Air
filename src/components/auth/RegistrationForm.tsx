@@ -237,36 +237,36 @@ export function RegistrationForm() {
       {/* Premium Stepper */}
       <div className="registration-stepper flex items-center justify-center mb-2 px-4 md:px-12 w-full max-w-2xl mx-auto">
         <div
-          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 1 ? "text-aci-green-700" : "text-slate-400"}`}
+          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 1 ? "text-aci-blue-700" : "text-slate-400"}`}
         >
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 1 ? "bg-gradient-to-br from-aci-green-500 to-aci-green-700 text-white shadow-aci-green-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 1 ? "bg-gradient-to-br from-aci-blue-500 to-aci-blue-700 text-white shadow-aci-blue-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
           >
             {step > 1 ? <Check size={20} strokeWidth={3} /> : "1"}
           </div>
           <span className="text-sm font-semibold tracking-wide hidden md:block">Profile</span>
         </div>
         <div
-          className={`flex-1 h-[2px] mx-2 md:mx-4 transition-all duration-500 ${step >= 2 ? "bg-aci-green-500" : "bg-slate-200"}`}
+          className={`flex-1 h-[2px] mx-2 md:mx-4 transition-all duration-500 ${step >= 2 ? "bg-aci-blue-500" : "bg-slate-200"}`}
         ></div>
         <div
-          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 2 ? "text-aci-green-700" : "text-slate-400"}`}
+          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 2 ? "text-aci-blue-700" : "text-slate-400"}`}
         >
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 2 ? "bg-gradient-to-br from-aci-green-500 to-aci-green-700 text-white shadow-aci-green-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 2 ? "bg-gradient-to-br from-aci-blue-500 to-aci-blue-700 text-white shadow-aci-blue-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
           >
             {step > 2 ? <Check size={20} strokeWidth={3} /> : "2"}
           </div>
           <span className="text-sm font-semibold tracking-wide hidden md:block">Documents</span>
         </div>
         <div
-          className={`flex-1 h-[2px] mx-2 md:mx-4 transition-all duration-500 ${step >= 3 ? "bg-aci-green-500" : "bg-slate-200"}`}
+          className={`flex-1 h-[2px] mx-2 md:mx-4 transition-all duration-500 ${step >= 3 ? "bg-aci-blue-500" : "bg-slate-200"}`}
         ></div>
         <div
-          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 3 ? "text-aci-green-700" : "text-slate-400"}`}
+          className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 3 ? "text-aci-blue-700" : "text-slate-400"}`}
         >
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 3 ? "bg-gradient-to-br from-aci-green-500 to-aci-green-700 text-white shadow-aci-green-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-500 ${step >= 3 ? "bg-gradient-to-br from-aci-blue-500 to-aci-blue-700 text-white shadow-aci-blue-500/30" : "bg-white border border-slate-200 text-slate-400"}`}
           >
             3
           </div>
@@ -604,7 +604,7 @@ export function RegistrationForm() {
               <Button
                 type="submit"
                 disabled={isAddressVerifying}
-                className="bg-gradient-to-r from-aci-green-500 to-aci-green-700 hover:from-aci-green-700 hover:to-aci-green-900 text-white w-full md:w-auto h-12 px-8 rounded-xl shadow-lg shadow-aci-green-500/20 font-semibold tracking-wide transition-all duration-300"
+                className="bg-gradient-to-r from-aci-blue-500 to-aci-blue-700 hover:from-aci-blue-700 hover:to-aci-blue-900 text-white w-full md:w-auto h-12 px-8 rounded-xl shadow-lg shadow-aci-blue-500/20 font-semibold tracking-wide transition-all duration-300"
               >
                 {isAddressVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isAddressVerifying ? "Verifying address..." : "Continue to Documents"}
@@ -618,7 +618,7 @@ export function RegistrationForm() {
           <div className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div
-                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.nid ? "border-red-400 bg-red-50/50" : documents.nid ? "border-aci-green-500 bg-aci-green-50/50" : "border-slate-300 bg-white/50 hover:border-aci-green-400 hover:bg-white/80 hover:shadow-md"}`}
+                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.nid ? "border-red-400 bg-red-50/50" : documents.nid ? "border-aci-blue-500 bg-aci-blue-50/50" : "border-slate-300 bg-white/50 hover:border-aci-blue-400 hover:bg-white/80 hover:shadow-md"}`}
               >
                 <Input
                   type="file"
@@ -630,7 +630,7 @@ export function RegistrationForm() {
                 <div className="pointer-events-none flex h-full flex-col">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.nid ? "bg-aci-green-100 text-aci-green-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-green-500"}`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.nid ? "bg-aci-blue-100 text-aci-blue-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-blue-500"}`}
                     >
                       {documents.nid ? <Check size={20} strokeWidth={2.5} /> : <Upload size={20} />}
                     </div>
@@ -642,14 +642,14 @@ export function RegistrationForm() {
                     Owner&apos;s clear scanned ID or photo.
                   </p>
                   {documents.nid ? (
-                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-green-200 bg-white px-3 py-2">
-                      <File size={14} className="shrink-0 text-aci-green-500" />
+                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-blue-200 bg-white px-3 py-2">
+                      <File size={14} className="shrink-0 text-aci-blue-500" />
                       <span className="truncate text-xs font-semibold text-slate-700">
                         {documents.nid.name}
                       </span>
                     </div>
                   ) : (
-                    <span className="mt-3 text-xs font-bold text-aci-green-600">Choose file</span>
+                    <span className="mt-3 text-xs font-bold text-aci-blue-600">Choose file</span>
                   )}
                   {docErrors.nid && (
                     <p role="alert" className="mt-2 text-xs font-bold text-red-600">
@@ -660,7 +660,7 @@ export function RegistrationForm() {
               </div>
 
               <div
-                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.tradeLicense ? "border-red-400 bg-red-50/50" : documents.tradeLicense ? "border-aci-green-500 bg-aci-green-50/50" : "border-slate-300 bg-white/50 hover:border-aci-green-400 hover:bg-white/80 hover:shadow-md"}`}
+                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.tradeLicense ? "border-red-400 bg-red-50/50" : documents.tradeLicense ? "border-aci-blue-500 bg-aci-blue-50/50" : "border-slate-300 bg-white/50 hover:border-aci-blue-400 hover:bg-white/80 hover:shadow-md"}`}
               >
                 <Input
                   type="file"
@@ -672,7 +672,7 @@ export function RegistrationForm() {
                 <div className="pointer-events-none flex h-full flex-col">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.tradeLicense ? "bg-aci-green-100 text-aci-green-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-green-500"}`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.tradeLicense ? "bg-aci-blue-100 text-aci-blue-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-blue-500"}`}
                     >
                       {documents.tradeLicense ? (
                         <Check size={20} strokeWidth={2.5} />
@@ -688,14 +688,14 @@ export function RegistrationForm() {
                     Your company&apos;s valid current license.
                   </p>
                   {documents.tradeLicense ? (
-                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-green-200 bg-white px-3 py-2">
-                      <File size={14} className="shrink-0 text-aci-green-500" />
+                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-blue-200 bg-white px-3 py-2">
+                      <File size={14} className="shrink-0 text-aci-blue-500" />
                       <span className="truncate text-xs font-semibold text-slate-700">
                         {documents.tradeLicense.name}
                       </span>
                     </div>
                   ) : (
-                    <span className="mt-3 text-xs font-bold text-aci-green-600">Choose file</span>
+                    <span className="mt-3 text-xs font-bold text-aci-blue-600">Choose file</span>
                   )}
                   {docErrors.tradeLicense && (
                     <p role="alert" className="mt-2 text-xs font-bold text-red-600">
@@ -706,7 +706,7 @@ export function RegistrationForm() {
               </div>
 
               <div
-                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.caabCertificate ? "border-red-400 bg-red-50/50" : documents.caabCertificate ? "border-aci-green-500 bg-aci-green-50/50" : "border-slate-300 bg-white/50 hover:border-aci-green-400 hover:bg-white/80 hover:shadow-md"}`}
+                className={`group relative min-w-0 overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 ${docErrors.caabCertificate ? "border-red-400 bg-red-50/50" : documents.caabCertificate ? "border-aci-blue-500 bg-aci-blue-50/50" : "border-slate-300 bg-white/50 hover:border-aci-blue-400 hover:bg-white/80 hover:shadow-md"}`}
               >
                 <Input
                   type="file"
@@ -718,7 +718,7 @@ export function RegistrationForm() {
                 <div className="pointer-events-none flex h-full flex-col">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.caabCertificate ? "bg-aci-green-100 text-aci-green-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-green-500"}`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${documents.caabCertificate ? "bg-aci-blue-100 text-aci-blue-600" : "bg-white text-slate-400 shadow-sm group-hover:text-aci-blue-500"}`}
                     >
                       {documents.caabCertificate ? (
                         <Check size={20} strokeWidth={2.5} />
@@ -735,14 +735,14 @@ export function RegistrationForm() {
                     Civil Aviation Authority certificate.
                   </p>
                   {documents.caabCertificate ? (
-                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-green-200 bg-white px-3 py-2">
-                      <File size={14} className="shrink-0 text-aci-green-500" />
+                    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-lg border border-aci-blue-200 bg-white px-3 py-2">
+                      <File size={14} className="shrink-0 text-aci-blue-500" />
                       <span className="truncate text-xs font-semibold text-slate-700">
                         {documents.caabCertificate.name}
                       </span>
                     </div>
                   ) : (
-                    <span className="mt-3 text-xs font-bold text-slate-500 group-hover:text-aci-green-600">
+                    <span className="mt-3 text-xs font-bold text-slate-500 group-hover:text-aci-blue-600">
                       Choose file
                     </span>
                   )}
@@ -767,7 +767,7 @@ export function RegistrationForm() {
               <Button
                 type="button"
                 onClick={onNextStep2}
-                className="bg-gradient-to-r from-aci-green-500 to-aci-green-700 hover:from-aci-green-700 hover:to-aci-green-900 text-white h-12 px-8 rounded-xl shadow-lg shadow-aci-green-500/20 font-semibold tracking-wide transition-all duration-300"
+                className="bg-gradient-to-r from-aci-blue-500 to-aci-blue-700 hover:from-aci-blue-700 hover:to-aci-blue-900 text-white h-12 px-8 rounded-xl shadow-lg shadow-aci-blue-500/20 font-semibold tracking-wide transition-all duration-300"
               >
                 Continue to Review
               </Button>
@@ -883,25 +883,25 @@ export function RegistrationForm() {
                 Documents Provided
               </h3>
               <div className="flex flex-col sm:flex-row gap-6 text-sm">
-                <div className="flex items-center gap-3 bg-aci-green-50/50 px-4 py-3 rounded-xl border border-aci-green-100 flex-1">
+                <div className="flex items-center gap-3 bg-aci-blue-50/50 px-4 py-3 rounded-xl border border-aci-blue-100 flex-1">
                   <Check
                     size={20}
-                    className="text-aci-green-500 bg-white rounded-full p-0.5 shadow-sm"
+                    className="text-aci-blue-500 bg-white rounded-full p-0.5 shadow-sm"
                   />{" "}
                   <span className="font-semibold text-slate-700">NID Uploaded</span>
                 </div>
-                <div className="flex items-center gap-3 bg-aci-green-50/50 px-4 py-3 rounded-xl border border-aci-green-100 flex-1">
+                <div className="flex items-center gap-3 bg-aci-blue-50/50 px-4 py-3 rounded-xl border border-aci-blue-100 flex-1">
                   <Check
                     size={20}
-                    className="text-aci-green-500 bg-white rounded-full p-0.5 shadow-sm"
+                    className="text-aci-blue-500 bg-white rounded-full p-0.5 shadow-sm"
                   />{" "}
                   <span className="font-semibold text-slate-700">Trade License Uploaded</span>
                 </div>
                 {documents.caabCertificate && (
-                  <div className="flex items-center gap-3 bg-aci-green-50/50 px-4 py-3 rounded-xl border border-aci-green-100 flex-1">
+                  <div className="flex items-center gap-3 bg-aci-blue-50/50 px-4 py-3 rounded-xl border border-aci-blue-100 flex-1">
                     <Check
                       size={20}
-                      className="text-aci-green-500 bg-white rounded-full p-0.5 shadow-sm"
+                      className="text-aci-blue-500 bg-white rounded-full p-0.5 shadow-sm"
                     />{" "}
                     <span className="font-semibold text-slate-700">CAAB Cert. Uploaded</span>
                   </div>
@@ -918,7 +918,7 @@ export function RegistrationForm() {
                   <input
                     id="terms"
                     type="checkbox"
-                    className="w-5 h-5 rounded border-slate-300 text-aci-green-600 focus:ring-aci-green-500 cursor-pointer"
+                    className="w-5 h-5 rounded border-slate-300 text-aci-blue-600 focus:ring-aci-blue-500 cursor-pointer"
                     checked={termsAccepted}
                     onChange={(e) => setTermsAccepted(e.target.checked)}
                   />
@@ -952,7 +952,7 @@ export function RegistrationForm() {
                 type="button"
                 onClick={onSubmitFinal}
                 disabled={isLoading || !termsAccepted}
-                className={`h-12 px-10 rounded-xl shadow-lg font-bold tracking-wide transition-all duration-300 ${termsAccepted ? "bg-gradient-to-r from-aci-green-500 to-aci-green-700 hover:from-aci-green-700 hover:to-aci-green-900 text-white shadow-aci-green-500/20" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}
+                className={`h-12 px-10 rounded-xl shadow-lg font-bold tracking-wide transition-all duration-300 ${termsAccepted ? "bg-gradient-to-r from-aci-blue-500 to-aci-blue-700 hover:from-aci-blue-700 hover:to-aci-blue-900 text-white shadow-aci-blue-500/20" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}
               >
                 {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                 Submit Application

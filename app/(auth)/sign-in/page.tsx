@@ -84,7 +84,7 @@ export default async function SignInPage() {
             New to ACI Air?{" "}
             <Link
               href="/sign-up"
-              className="text-aci-green-600 hover:text-aci-green-800 font-bold hover:underline underline-offset-4 decoration-2 transition-all"
+              className="text-aci-blue-600 hover:text-aci-blue-800 font-bold hover:underline underline-offset-4 decoration-2 transition-all"
             >
               Apply for a Partner Account
             </Link>

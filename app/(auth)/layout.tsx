@@ -11,7 +11,7 @@ export default async function AuthLayout({
       {/* Premium Mesh Gradient Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 bg-slate-50">
         <div
-          className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-aci-green-500/20 blur-[120px] mix-blend-multiply animate-pulse"
+          className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-aci-blue-500/20 blur-[120px] mix-blend-multiply animate-pulse"
           style={{ animationDuration: "8s" }}
         ></div>
         <div
@@ -27,8 +27,10 @@ export default async function AuthLayout({
       <PublicNavbar isAuthenticated={await isAuthenticated()} />
 
       {/* Main Content Area */}
-      <main className="auth-main min-h-0 flex-1 overflow-y-auto w-full relative z-10 flex flex-col p-4 pt-5 pb-6 sm:p-6 sm:pt-6 sm:pb-8 lg:p-8 lg:pt-7 lg:pb-10">
-        <div className="mx-auto w-full flex justify-center shrink-0">{children}</div>
+      <main className="auth-main min-h-0 flex-1 overflow-y-auto w-full relative z-10 p-4 sm:p-6 lg:p-8">
+        <div className="auth-content mx-auto flex min-h-full w-full shrink-0 items-center justify-center">
+          {children}
+        </div>
       </main>
     </div>
   );

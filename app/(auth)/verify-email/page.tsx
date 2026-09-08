@@ -17,7 +17,7 @@ export default function VerifyEmailPage() {
         </div>
 
         <div className="mt-8 text-sm text-muted-foreground">
-          <Link href="/sign-in" className="text-aci-green-700 hover:text-aci-green-900 font-medium">
+          <Link href="/sign-in" className="text-aci-blue-700 hover:text-aci-blue-900 font-medium">
             Return to Sign In
           </Link>
         </div>

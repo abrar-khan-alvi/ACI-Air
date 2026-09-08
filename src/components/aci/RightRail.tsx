@@ -25,7 +25,7 @@ const bookings = [
 
 export function RightRail() {
   return (
-    <div className="grid auto-rows-min content-start items-start gap-3 md:grid-cols-2 xl:grid-cols-1">
+    <div className="grid min-w-0 auto-rows-min content-start items-start gap-3 sm:grid-cols-2 xl:grid-cols-1">
       <section className="surface-card p-3.5">
         <div className="flex items-center justify-between pb-2">
           <h2 className="font-display text-[13px] font-semibold">Upcoming trips</h2>
@@ -76,7 +76,7 @@ export function RightRail() {
         </button>
       </section>
 
-      <section className="relative overflow-hidden rounded-xl bg-forest p-3.5 text-primary-foreground shadow-card md:col-span-2 xl:col-span-1">
+      <section className="relative overflow-hidden rounded-xl bg-forest p-3.5 text-primary-foreground shadow-card sm:col-span-2 xl:col-span-1">
         <div className="absolute -bottom-10 -right-8 size-28 rounded-full bg-primary-foreground/10" />
         <div className="relative flex items-center gap-1.5">
           <Gift className="size-3.5 text-gold" />

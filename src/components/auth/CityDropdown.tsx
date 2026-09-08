@@ -53,8 +53,8 @@ export function CityDropdown({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={cn(
-          "flex h-12 w-full items-center justify-between rounded-xl border border-slate-200 bg-white/50 px-4 py-2 text-sm text-slate-800 shadow-sm transition-all hover:border-slate-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-aci-green-500 disabled:cursor-not-allowed disabled:opacity-50 data-[invalid=true]:border-red-500 data-[invalid=true]:bg-red-50/50",
-          isOpen && "border-transparent bg-white ring-2 ring-aci-green-500",
+          "flex h-12 w-full items-center justify-between rounded-xl border border-slate-200 bg-white/50 px-4 py-2 text-sm text-slate-800 shadow-sm transition-all hover:border-slate-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-aci-blue-500 disabled:cursor-not-allowed disabled:opacity-50 data-[invalid=true]:border-red-500 data-[invalid=true]:bg-red-50/50",
+          isOpen && "border-transparent bg-white ring-2 ring-aci-blue-500",
         )}
       >
         <span className={cn("truncate", !value && "text-slate-400")}>
@@ -82,7 +82,7 @@ export function CityDropdown({
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search cities..."
               aria-label="Search cities"
-              className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-aci-green-500 focus:bg-white focus:ring-2 focus:ring-aci-green-500/20"
+              className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-aci-blue-500 focus:bg-white focus:ring-2 focus:ring-aci-blue-500/20"
               autoFocus
             />
           </div>
@@ -100,7 +100,7 @@ export function CityDropdown({
                   onChange(city);
                   setIsOpen(false);
                 }}
-                className="w-full truncate rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none aria-selected:bg-aci-green-50 aria-selected:text-aci-green-800"
+                className="w-full truncate rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none aria-selected:bg-aci-blue-50 aria-selected:text-aci-blue-800"
               >
                 {city}
               </button>
