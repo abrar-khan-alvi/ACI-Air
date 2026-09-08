@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image" },
-  icons: { icon: "/logo.jpg", shortcut: "/logo.jpg", apple: "/logo.jpg" },
+  icons: { icon: "/logo1.png", shortcut: "/logo1.png", apple: "/logo1.png" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
