@@ -28,8 +28,8 @@ const navLinks = [
 
 export function BrandLogo() {
   return (
-    <span className="flex items-center gap-2.5">
-      <span className="relative h-7 w-[100px] shrink-0 flex items-center">
+    <span className="flex items-center gap-2.5 ml-3">
+      <span className="relative h-6 w-[85px] shrink-0 flex items-center">
         <Image
           src="/logo_white.png"
           alt="ACI Air Logo"
@@ -46,6 +46,7 @@ export function BrandLogo() {
 export function PublicNavbar({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const [mobileMenu, setMobileMenu] = useState(false);
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const accountHref = isAuthenticated ? "/user" : "/sign-in";
   const accountLabel = isAuthenticated ? "My Dashboard" : "Sign in";
 
@@ -58,7 +59,7 @@ export function PublicNavbar({ isAuthenticated = false }: { isAuthenticated?: bo
           </Link>
 
           <nav className="ml-8 hidden items-center gap-1 lg:flex" aria-label="Main navigation">
-            {navLinks.map((link) => {
+            {!isHomePage && navLinks.map((link) => {
               const isActive = link.to !== '/' && pathname?.startsWith(link.to);
               return (
                 <Link
@@ -118,7 +119,7 @@ export function PublicNavbar({ isAuthenticated = false }: { isAuthenticated?: bo
             <Link to="/" onClick={() => setMobileMenu(false)} className="mb-4 mt-8 w-fit">
               <BrandLogo />
             </Link>
-            {navLinks.map((link) => {
+            {!isHomePage && navLinks.map((link) => {
               const isActive = link.to !== '/' && pathname?.startsWith(link.to);
               return (
                 <Link
