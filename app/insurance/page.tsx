@@ -1,34 +1,12 @@
-import { PublicNavbar } from "@/components/aci/PublicNavbar";
+import type { Metadata } from "next";
+import InsurancePage from "@/routes/insurance";
 import { isAuthenticated } from "@/lib/auth/session";
 
+export const metadata: Metadata = {
+  title: "Travel Insurance - ACI Air",
+  description: "Find comprehensive travel insurance plans for your journey.",
+};
+
 export default async function Page() {
-  return (
-    <div className="min-h-screen bg-background">
-      <PublicNavbar isAuthenticated={await isAuthenticated()} />
-      <main className="mx-auto max-w-[1240px] px-3 py-24 sm:px-5 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary text-primary mb-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
-        </div>
-        <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Insurance Coming Soon
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-md mx-auto">
-          Comprehensive travel insurance options are on the way to protect your upcoming trips.
-        </p>
-      </main>
-    </div>
-  );
+  return <InsurancePage isAuthenticated={await isAuthenticated()} />;
 }
