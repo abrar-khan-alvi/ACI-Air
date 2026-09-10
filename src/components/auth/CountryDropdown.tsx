@@ -60,7 +60,7 @@ export function CountryDropdown({
 
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const filteredCountries = ALL_COUNTRIES.filter((country) =>
-    `${country.name} ${country.alpha3} ${country.dialCode}`
+    `${country.name} ${country.code ?? country.alpha3 ?? ""} ${country.dialCode}`
       .toLowerCase()
       .includes(query.trim().toLowerCase()),
   );
@@ -134,10 +134,10 @@ export function CountryDropdown({
           >
             {filteredCountries.map((country) => (
               <button
-                key={country.alpha3}
+                key={country.code ?? country.alpha3 ?? country.name}
                 type="button"
                 role="option"
-                aria-selected={selected?.alpha3 === country.alpha3}
+                aria-selected={(selected?.code ?? selected?.alpha3) === (country.code ?? country.alpha3)}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none aria-selected:bg-aci-blue-50 aria-selected:text-aci-blue-800"
                 onClick={() => {
                   setSelected(country);
