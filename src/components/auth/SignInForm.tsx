@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/auth/ui/button";
 import { Input } from "@/components/auth/ui/input";
 import { Label } from "@/components/auth/ui/label";
@@ -24,8 +24,8 @@ export function SignInForm() {
   } = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "test@mail.com",
-      password: "123456",
+      email: "",
+      password: "",
     },
   });
 
@@ -67,20 +67,25 @@ export function SignInForm() {
       )}
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
+        <div className="relative">
+          <Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
         <Input
           id="email"
           type="email"
-          placeholder="Enter your email"
+          autoComplete="email"
+          placeholder="name@company.com"
+          className="pl-11"
           {...register("email")}
           disabled={isLoading}
           aria-invalid={!!errors.email}
-        />
+        /></div>
         {errors.email && <span className="text-sm text-destructive">{errors.email.message}</span>}
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="password">Password</Label>
         <div className="relative">
+          <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
@@ -88,13 +93,13 @@ export function SignInForm() {
             {...register("password")}
             disabled={isLoading}
             aria-invalid={!!errors.password}
-            className="pr-10"
+            autoComplete="current-password"
+            className="pl-11 pr-11"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            tabIndex={-1}
+            className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-slate-100 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aci-blue-500"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -114,7 +119,7 @@ export function SignInForm() {
         </Link>
       </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full h-12 bg-forest text-primary-foreground shadow-soft transition-all hover:shadow-card hover:-translate-y-0.5 border-0">
+      <Button type="submit" disabled={isLoading} className="h-12 w-full rounded-xl border-0 bg-gradient-to-r from-aci-blue-700 to-aci-blue-900 font-bold text-white shadow-lg shadow-aci-blue-900/15 transition-all hover:-translate-y-0.5 hover:shadow-xl">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Sign In
       </Button>

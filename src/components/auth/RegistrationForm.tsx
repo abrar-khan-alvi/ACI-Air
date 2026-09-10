@@ -233,9 +233,9 @@ export function RegistrationForm() {
   };
 
   return (
-    <div className="registration-form flex flex-col gap-10 w-full">
+    <div className="registration-form flex w-full flex-col gap-7">
       {/* Premium Stepper */}
-      <div className="registration-stepper flex items-center justify-center mb-2 px-4 md:px-12 w-full max-w-2xl mx-auto">
+      <div className="registration-stepper mx-auto mb-1 flex w-full max-w-2xl items-center justify-center px-2 md:px-8">
         <div
           className={`flex flex-col items-center gap-2 relative z-10 transition-colors duration-300 ${step >= 1 ? "text-aci-blue-700" : "text-slate-400"}`}
         >
@@ -244,7 +244,7 @@ export function RegistrationForm() {
           >
             {step > 1 ? <Check size={20} strokeWidth={3} /> : "1"}
           </div>
-          <span className="text-sm font-semibold tracking-wide hidden md:block">Profile</span>
+          <span className="hidden text-sm font-semibold tracking-wide md:block">Partner details</span>
         </div>
         <div
           className={`flex-1 h-[2px] mx-2 md:mx-4 transition-all duration-500 ${step >= 2 ? "bg-aci-blue-500" : "bg-slate-200"}`}
@@ -274,7 +274,7 @@ export function RegistrationForm() {
         </div>
       </div>
 
-      <div className="registration-panel bg-white/40 border border-white/60 rounded-3xl p-6 md:p-8 shadow-sm">
+      <div className="registration-panel rounded-3xl border border-slate-200/80 bg-slate-50/65 p-4 shadow-inner shadow-slate-200/30 sm:p-6 md:p-8">
         {/* Step 1: Partner Information */}
         {step === 1 && (
           <form
@@ -299,7 +299,7 @@ export function RegistrationForm() {
                 </div>
               </div>
             )}
-            <div className="registration-fields grid grid-cols-2 gap-6 lg:grid-cols-4">
+            <div className="registration-fields grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="ownerName" className="text-slate-700 font-semibold ml-1">
                   Owner Full Name <span className="text-red-500">*</span>
@@ -525,7 +525,7 @@ export function RegistrationForm() {
                   </span>
                 )}
               </div>
-              <div className="flex flex-col gap-2 col-span-2 lg:col-span-4">
+              <div className="flex flex-col gap-2 sm:col-span-2">
                 <Label htmlFor="address" className="text-slate-700 font-semibold ml-1">
                   Office Address <span className="text-red-500">*</span>
                 </Label>

@@ -332,6 +332,11 @@
   .dashboard-enter {
     animation: none;
   }
+
+  .auth-flight-dot::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 /* Keep authentication actions visible on short laptop displays. */
@@ -452,4 +457,32 @@
 .auth-layout,
 .auth-main {
   overscroll-behavior: none;
+}
+
+@utility auth-page-grid {
+  background-image:
+    linear-gradient(oklch(0.35 0.07 273 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.35 0.07 273 / 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility auth-route-grid {
+  background-image:
+    radial-gradient(circle at 20% 25%, white 0 2px, transparent 3px),
+    radial-gradient(circle at 75% 68%, white 0 2px, transparent 3px),
+    linear-gradient(130deg, transparent 38%, rgb(255 255 255 / 0.18) 38.2%, transparent 38.6%);
+}
+
+.auth-flight-dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgb(245 130 32 / 0.45);
+  border-radius: 999px;
+  animation: auth-radar 2.2s ease-out infinite;
+}
+
+@keyframes auth-radar {
+  0% { opacity: 0.9; transform: scale(0.45); }
+  100% { opacity: 0; transform: scale(1.35); }
 }
