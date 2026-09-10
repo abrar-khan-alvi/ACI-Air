@@ -1,22 +1,27 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SignInForm } from "@/components/auth/SignInForm";
+import { AuthShowcase, MobileAuthLogo } from "@/components/auth/AuthShowcase";
 import { Button } from "@/components/auth/ui/button";
 import { isAuthenticated } from "@/lib/auth/session";
 
 export default async function SignInPage() {
   if (await isAuthenticated()) redirect("/user");
   return (
-    <div className="sign-in-page w-full max-w-[480px] perspective-1000">
-      <div className="sign-in-card backdrop-blur-xl bg-white/70 border border-white/50 shadow-[0_30px_60px_-15px_rgba(0,166,81,0.15)] rounded-3xl p-8 sm:p-10 transform-gpu transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(0,166,81,0.2)]">
-        <div className="sign-in-heading text-center mb-10">
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+    <div className="sign-in-page grid min-h-screen w-full bg-white lg:grid-cols-2">
+      <AuthShowcase />
+      <section className="sign-in-card flex min-h-screen items-center justify-center px-5 py-10 sm:px-10 lg:px-12 xl:px-20">
+        <div className="w-full max-w-[460px]">
+        <MobileAuthLogo />
+        <div className="sign-in-heading mb-8">
+          <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-aci-blue-600">Partner portal</span>
+          <h1 className="mb-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
             Welcome back
           </h1>
-          <p className="text-slate-500 font-medium">Sign in to your Travel Agent portal</p>
+          <p className="text-sm font-medium leading-6 text-slate-500">Sign in to continue managing your customers&apos; journeys.</p>
         </div>
 
-        <div className="sign-in-social flex flex-col gap-3 mb-8">
+        <div className="sign-in-social mb-6 grid grid-cols-2 gap-3">
           <Button
             variant="outline"
             className="h-12 w-full flex items-center justify-center gap-3 bg-white/80 border-slate-200 text-slate-700 hover:bg-white hover:border-slate-300 hover:text-slate-700 hover:shadow-md transition-all duration-300 font-semibold rounded-xl group relative overflow-hidden"
@@ -45,7 +50,7 @@ export default async function SignInPage() {
                 fill="#EA4335"
               />
             </svg>
-            Continue with Google
+            Google
           </Button>
 
           <Button
@@ -64,7 +69,7 @@ export default async function SignInPage() {
                 fill="currentColor"
               />
             </svg>
-            Continue with Facebook
+            Facebook
           </Button>
         </div>
 
@@ -73,13 +78,13 @@ export default async function SignInPage() {
             <div className="w-full border-t border-slate-200"></div>
           </div>
           <div className="relative bg-white/70 backdrop-blur-sm px-4 text-xs font-bold uppercase tracking-widest text-slate-400 rounded-full">
-            Or log in with email
+            Or use email
           </div>
         </div>
 
         <SignInForm />
 
-        <div className="sign-in-footer mt-10 text-center">
+        <div className="sign-in-footer mt-8 border-t border-slate-100 pt-6 text-center">
           <p className="text-sm text-slate-500 font-medium">
             New to ACI Air?{" "}
             <Link
@@ -90,7 +95,8 @@ export default async function SignInPage() {
             </Link>
           </p>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
