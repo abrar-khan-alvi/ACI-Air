@@ -1,9 +1,13 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
+import { withSearch } from "@/lib/navigation";
 import { ArrowLeftRight, CalendarDays, Plane, Plus, Search, X } from "lucide-react";
 import { placeByCode, type Place } from "@/lib/airports";
 import { cn } from "@/lib/utils";
 import type { CabinClass, Pax } from "@/lib/flight-results";
+import type { FareChannel } from "@/lib/fare-channel";
 import { encodeLegs, type TripType } from "@/lib/search-params";
 import { AirportField } from "./AirportField";
 import { PassengerField } from "./PassengerField";
@@ -63,6 +67,7 @@ type Props = {
   initialPax?: Pax;
   initialCabin?: CabinClass;
   compact?: boolean;
+  channel?: FareChannel;
 };
 
 export function FlightSearchForm({
@@ -72,8 +77,9 @@ export function FlightSearchForm({
   initialPax,
   initialCabin = "Economy",
   compact = false,
+  channel = "b2c",
 }: Props) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [trip, setTrip] = useState<TripType>(initialTrip);
   const [segments, setSegments] = useState<Segment[]>(initialSegments ?? defaultSegments());
   const [returnDate, setReturnDate] = useState(initialReturnDate ?? iso(14));
@@ -99,8 +105,7 @@ export function FlightSearchForm({
 
   const submit = () => {
     for (const [i, s] of activeSegments.entries()) {
-      if (!s.from || !s.to)
-        return setError(`Select departure and destination for flight ${i + 1}.`);
+      if (!s.from || !s.to) return setError(`Select departure and destination for flight ${i + 1}.`);
       if (s.from.code === s.to.code)
         return setError(`Flight ${i + 1}: departure and destination must be different.`);
       if (!s.date) return setError(`Pick a date for flight ${i + 1}.`);
@@ -118,17 +123,17 @@ export function FlightSearchForm({
           ]
         : activeSegments.map((s) => ({ from: s.from!, to: s.to!, date: s.date }));
 
-    void navigate({
-      to: "/search",
-      search: {
+    router.push(
+      withSearch("/search", {
         trip,
         legs: encodeLegs(legs),
         adults: pax.adults,
         children: pax.children,
         infants: pax.infants,
         cabin,
-      },
-    });
+        channel,
+      }),
+    );
   };
 
   return (
@@ -192,12 +197,7 @@ export function FlightSearchForm({
                 onChange={(v) => setSeg(i, { date: v })}
               />
               {trip === "round" ? (
-                <DateField
-                  label="Return"
-                  value={returnDate}
-                  min={seg.date}
-                  onChange={setReturnDate}
-                />
+                <DateField label="Return" value={returnDate} min={seg.date} onChange={setReturnDate} />
               ) : null}
             </div>
 

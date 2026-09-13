@@ -1,20 +1,8 @@
 import { Plane, Clock3, Gift, ChevronRight, Hotel, Signal } from "lucide-react";
 
 const trips = [
-  {
-    route: "DAC → SIN",
-    airline: "ACI Air 402",
-    date: "24 Aug · 09:40",
-    gate: "Gate 7B",
-    countdown: "in 7d",
-  },
-  {
-    route: "SIN → BKK",
-    airline: "ACI Air 118",
-    date: "28 Aug · 14:15",
-    gate: "Gate C3",
-    countdown: "in 11d",
-  },
+  { route: "DAC → SIN", airline: "ACI Air 402", date: "24 Aug · 09:40", gate: "Gate 7B", countdown: "in 7d" },
+  { route: "SIN → BKK", airline: "ACI Air 118", date: "28 Aug · 14:15", gate: "Gate C3", countdown: "in 11d" },
 ];
 
 const bookings = [
@@ -83,7 +71,7 @@ export function RightRail() {
           <h2 className="font-display text-[13px] font-semibold">Rewards</h2>
         </div>
         <p className="relative mt-2 font-display text-2xl font-bold">8,420</p>
-        <p className="relative text-[11px] text-primary-foreground/70">Green Miles available</p>
+        <p className="relative text-[11px] text-primary-foreground/70">ACI Miles available</p>
         <div className="relative mt-2.5 h-1 w-full overflow-hidden rounded-full bg-primary-foreground/20">
           <div className="h-full w-[84%] rounded-full bg-sun" />
         </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Plane,
@@ -89,12 +91,10 @@ function Nav({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="mt-auto rounded-xl border border-sidebar-border bg-sidebar-accent/80 p-3">
-        <p className="font-display text-[13px] font-semibold text-sidebar-accent-foreground">
-          Green Miles Gold
+          <p className="font-display text-[13px] font-semibold text-sidebar-accent-foreground">
+          ACI Miles Gold
         </p>
-        <p className="mt-0.5 text-[11px] text-sidebar-foreground/65">
-          8,420 pts · 1,580 to Platinum
-        </p>
+        <p className="mt-0.5 text-[11px] text-sidebar-foreground/65">8,420 pts · 1,580 to Platinum</p>
         <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-secondary">
           <div className="h-full w-[84%] rounded-full bg-sun" />
         </div>

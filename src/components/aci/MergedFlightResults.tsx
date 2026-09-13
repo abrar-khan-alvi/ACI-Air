@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
@@ -29,6 +31,7 @@ import {
   money,
   type Fare,
 } from "@/lib/fare-details";
+import { applyChannel, type FareChannel } from "@/lib/fare-channel";
 import { BookingDrawer, type ItineraryLeg } from "./BookingDrawer";
 
 export type MergedLegInput = { from: Place; to: Place; dates: string; label: string };
@@ -38,7 +41,7 @@ type Props = {
   pax: Pax;
   cabin: CabinClass;
   loading: boolean;
-
+  channel?: FareChannel;
   sectionId?: string;
 };
 
@@ -74,15 +77,15 @@ function initials(airline: string) {
     .toUpperCase();
 }
 
-export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Props) {
+export function MergedFlightResults({ legs, pax, cabin, loading, channel = "b2c", sectionId }: Props) {
   const combos = useMemo<Combo[]>(() => {
-    const lists = legs.map((l) => buildFlightResults(l.from, l.to, pax, cabin));
+    const lists = legs.map((l) => buildFlightResults(l.from, l.to, pax, cabin).map((f) => applyChannel(f, channel)));
     const n = Math.min(...lists.map((l) => l.length));
     const out: Combo[] = [];
     for (let i = 0; i < n; i++) {
       const fares = lists.map((list, k) => list[(i + k * 3) % list.length]!);
       const price = fares.reduce((t, f) => t + f.price, 0);
-      const listPrice = fares.reduce((t, f) => t + flightFacts(f).listPrice, 0);
+      const listPrice = fares.reduce((t, f) => t + (channel === "agent" ? (f.customerPrice ?? f.price) : flightFacts(f).listPrice), 0);
       out.push({
         id: fares.map((f) => f.id).join("|"),
         fares,
@@ -98,7 +101,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
       });
     }
     return out.sort((a, b) => a.price - b.price);
-  }, [legs, pax, cabin]);
+  }, [legs, pax, cabin, channel]);
 
   const minPrice = combos[0]?.price ?? 0;
   const maxPrice = combos.reduce((m, c) => Math.max(m, c.price), 0);
@@ -118,8 +121,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
 
   const airlineList = useMemo(() => {
     const map = new Map<string, number>();
-    for (const c of combos)
-      for (const a of c.airlines) map.set(a, Math.min(map.get(a) ?? Infinity, c.price));
+    for (const c of combos) for (const a of c.airlines) map.set(a, Math.min(map.get(a) ?? Infinity, c.price));
     return [...map.entries()].sort((a, b) => a[1] - b[1]);
   }, [combos]);
 
@@ -132,19 +134,12 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
       return true;
     });
     return out.sort((a, b) =>
-      sort === "cheapest"
-        ? a.price - b.price
-        : sort === "fastest"
-          ? a.durationMin - b.durationMin
-          : a.departMin - b.departMin,
+      sort === "cheapest" ? a.price - b.price : sort === "fastest" ? a.durationMin - b.durationMin : a.departMin - b.departMin,
     );
   }, [combos, stops, airlines, refundOnly, budget, sort]);
 
   const activeCount =
-    (stops !== "any" ? 1 : 0) +
-    airlines.length +
-    (refundOnly ? 1 : 0) +
-    (budget < maxPrice ? 1 : 0);
+    (stops !== "any" ? 1 : 0) + airlines.length + (refundOnly ? 1 : 0) + (budget < maxPrice ? 1 : 0);
 
   const reset = () => {
     setStops("any");
@@ -158,26 +153,15 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
   const filters = (
     <div className="grid gap-4">
       <div>
-        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Stops
-        </p>
+        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Stops</p>
         <div className="flex flex-wrap gap-1.5">
-          {(
-            [
-              ["any", "Any"],
-              [0, "Non-stop"],
-              [1, "1 stop"],
-              [2, "2+ stops"],
-            ] as const
-          ).map(([id, label]) => (
+          {([["any", "Any"], [0, "Non-stop"], [1, "1 stop"], [2, "2+ stops"]] as const).map(([id, label]) => (
             <button
               key={String(id)}
               onClick={() => setStops(id as StopFilter)}
               className={cn(
                 "rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition-colors",
-                stops === id
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground",
+                stops === id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground",
               )}
             >
               {label}
@@ -188,9 +172,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
 
       <div>
         <div className="mb-1.5 flex items-center justify-between">
-          <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Max total price
-          </p>
+          <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Max total price</p>
           <span className="font-display text-[12px] font-semibold">{money(budget)}</span>
         </div>
         <input
@@ -210,24 +192,15 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
       </div>
 
       <div>
-        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Airlines
-        </p>
+        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Airlines</p>
         <div className="grid gap-1">
           {airlineList.map(([name, price]) => (
-            <label
-              key={name}
-              className="flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 hover:bg-secondary/60"
-            >
+            <label key={name} className="flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 hover:bg-secondary/60">
               <input
                 type="checkbox"
                 checked={airlines.includes(name)}
                 onChange={() =>
-                  setAirlines(
-                    airlines.includes(name)
-                      ? airlines.filter((x) => x !== name)
-                      : [...airlines, name],
-                  )
+                  setAirlines(airlines.includes(name) ? airlines.filter((x) => x !== name) : [...airlines, name])
                 }
                 className="size-3.5 accent-[var(--color-primary)]"
               />
@@ -270,18 +243,15 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
   return (
     <section id={sectionId} className="scroll-mt-20">
       <p className="text-[12px] font-medium text-muted-foreground">
-        Showing <span className="font-semibold text-foreground">{filtered.length}</span> of{" "}
-        {combos.length} itineraries
+        Showing <span className="font-semibold text-foreground">{filtered.length}</span> of {combos.length} itineraries
       </p>
 
-      <div className="mt-3 grid gap-4 lg:grid-cols-[236px_minmax(0,1fr)] lg:items-start">
+      <div className="mt-3 grid gap-4 lg:grid-cols-[210px_minmax(0,1fr)] lg:items-start">
         <aside className="surface-card sticky top-[68px] hidden rounded-xl p-3.5 lg:block">
           <p className="mb-3 flex items-center gap-1.5 font-display text-[13px] font-semibold">
             <Filter className="size-3.5 text-primary" /> Filters
             {activeCount ? (
-              <span className="rounded-full bg-primary/10 px-1.5 text-[10.5px] font-semibold text-primary">
-                {activeCount}
-              </span>
+              <span className="rounded-full bg-primary/10 px-1.5 text-[10.5px] font-semibold text-primary">{activeCount}</span>
             ) : null}
           </p>
           {filters}
@@ -302,9 +272,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                   onClick={() => setSort(s.id)}
                   className={cn(
                     "rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
-                    sort === s.id
-                      ? "bg-card text-foreground shadow-soft"
-                      : "text-muted-foreground hover:text-foreground",
+                    sort === s.id ? "bg-card text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {s.label}
@@ -313,17 +281,31 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
             </div>
           </div>
 
-          {openMobile ? (
-            <div className="surface-card mb-3 rounded-xl p-3.5 lg:hidden">{filters}</div>
-          ) : null}
+          <div className="no-scrollbar mb-2 flex gap-2 overflow-x-auto pb-1">
+            {airlineList.slice(0, 4).map(([name, price]) => (
+              <button
+                key={name}
+                onClick={() => setAirlines(airlines.includes(name) ? [] : [name])}
+                className={cn(
+                  "grid min-w-[132px] grid-cols-[28px_minmax(0,1fr)] items-center gap-2 rounded-lg border bg-card px-2.5 py-2 text-left shadow-soft transition",
+                  airlines.includes(name) ? "border-primary ring-1 ring-primary/20" : "border-border hover:border-primary/35",
+                )}
+              >
+                <span className="grid size-7 place-items-center rounded-md bg-primary/10 text-[9px] font-bold text-primary">{initials(name)}</span>
+                <span className="min-w-0">
+                  <span className="block truncate text-[10.5px] font-semibold">{name}</span>
+                  <span className="block text-[11px] text-muted-foreground">from {money(price)}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {openMobile ? <div className="surface-card mb-3 rounded-xl p-3.5 lg:hidden">{filters}</div> : null}
 
           {loading ? (
-            <div className="grid gap-3">
+            <div className="grid gap-2 sm:gap-3">
               {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-[236px] animate-pulse rounded-2xl border border-border/60 bg-secondary/50"
-                />
+                <div key={i} className="h-[236px] animate-pulse rounded-2xl border border-border/60 bg-secondary/50" />
               ))}
               <p className="flex items-center gap-2 text-[12px] text-muted-foreground">
                 <Loader2 className="size-3.5 animate-spin" /> Searching live fares…
@@ -331,9 +313,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
             </div>
           ) : filtered.length === 0 ? (
             <div className="surface-card grid place-items-center gap-2 rounded-xl p-8 text-center">
-              <p className="font-display text-[14px] font-semibold">
-                No itineraries match these filters
-              </p>
+              <p className="font-display text-[14px] font-semibold">No itineraries match these filters</p>
               <button
                 onClick={reset}
                 className="mt-1 rounded-lg bg-forest px-4 py-2 text-[12.5px] font-semibold text-primary-foreground"
@@ -351,73 +331,77 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                   <article
                     key={c.id}
                     className={cn(
-                      "surface-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-float hover:ring-1 hover:ring-primary/25",
+                      "surface-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-float hover:ring-1 hover:ring-primary/25",
+                      "rounded-xl",
                       best && !isSelected && "ring-1 ring-primary/30",
                       isSelected && "ring-2 ring-primary shadow-float -translate-y-0.5",
                     )}
                   >
-                    {isSelected ? (
-                      <span className="absolute inset-y-0 left-0 w-1 bg-forest" aria-hidden />
-                    ) : null}
+                    {isSelected ? <span className="absolute inset-y-0 left-0 w-1 bg-forest" aria-hidden /> : null}
                     {best ? (
                       <span className="absolute right-0 top-0 z-10 rounded-bl-xl bg-forest px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-foreground">
                         Best value
                       </span>
                     ) : null}
 
-                    <div className="grid md:grid-cols-[minmax(0,1fr)_240px]">
+                    <div className={cn("hidden items-center justify-between gap-2 border-b border-border/60 bg-secondary/25 px-3 py-2 sm:flex sm:px-4", best && "sm:pr-28")}>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-teal/10 px-2 py-1 text-[10.5px] font-semibold text-teal">
+                          <Clock className="size-3" /> Book & hold · one booking
+                        </span>
+                        <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10.5px] font-semibold", c.refundable ? "bg-teal/10 text-teal" : "bg-secondary text-muted-foreground")}>
+                          {c.refundable ? <ShieldCheck className="size-3" /> : <Ban className="size-3" />}
+                          {c.refundable ? "Refundable" : "Fare rules apply"}
+                        </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-[minmax(0,1fr)_230px]">
                       <div className="min-w-0 divide-y divide-border/60">
                         {c.fares.map((f, i) => {
                           const leg = legs[i]!;
                           const facts = flightFacts(f);
                           return (
-                            <div key={`${c.id}-${i}`} className="min-w-0 p-4 md:p-5">
-                              <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
-                                <div className="flex min-w-0 items-center gap-3">
-                                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-teal font-display text-[12px] font-bold text-primary-foreground shadow-soft">
+                            <div key={`${c.id}-${i}`} className="min-w-0 p-2.5 sm:p-4">
+                              <div className={cn("grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2", best && i === 0 && "pr-20 sm:pr-0")}>
+                                <div className="flex min-w-0 items-center gap-2.5">
+                                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-teal font-display text-[11px] font-bold text-primary-foreground shadow-soft sm:size-10 sm:text-[12px]">
                                     {initials(f.airline)}
                                   </span>
                                   <span className="min-w-0">
                                     <span className="block truncate font-display text-[15px] font-semibold">
                                       {f.airline}
                                     </span>
-                                    <span className="block truncate text-[12px] text-muted-foreground">
-                                      {f.code} · {f.cabin} · {facts.aircraft}
-                                    </span>
+                                    <span className="block truncate text-[11px] text-muted-foreground sm:text-[12px]">{f.code}</span>
                                   </span>
                                 </div>
-                                <div className="flex flex-wrap items-center gap-1.5">
+                                <div className="flex items-center gap-1.5">
                                   <span className="rounded-full bg-primary/10 px-2 py-1 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-primary">
                                     {leg.label}
                                   </span>
-                                  <span className="flex items-center gap-1 rounded-full bg-secondary/70 px-2 py-1 text-[10.5px] font-semibold text-muted-foreground">
+                                  <span className="hidden items-center gap-1 rounded-full bg-secondary/70 px-2 py-1 text-[10.5px] font-semibold text-muted-foreground sm:flex">
                                     <Clock className="size-3" /> {facts.onTime}% on-time
                                   </span>
-                                  <span className="flex items-center gap-1 rounded-full bg-clay/15 px-2 py-1 text-[10.5px] font-semibold text-foreground/80">
+                                  <span className="hidden items-center gap-1 rounded-full bg-clay/15 px-2 py-1 text-[10.5px] font-semibold text-foreground/80 sm:flex">
                                     <CircleAlert className="size-3" /> {facts.seatsLeft} seats left
                                   </span>
                                 </div>
                               </div>
 
-                              <div className="mt-4 grid items-center gap-3 rounded-xl bg-secondary/35 p-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-5 sm:p-4">
+                              <div className="mt-2 grid grid-cols-[minmax(64px,auto)_minmax(74px,1fr)_minmax(64px,auto)] items-center gap-1.5 rounded-lg bg-secondary/35 p-2 sm:mt-3 sm:gap-4 sm:rounded-xl sm:p-3">
                                 <div className="sm:text-left">
-                                  <p className="font-display text-[24px] font-semibold leading-none tracking-tight">
+                                  <p className="font-display text-[19px] font-semibold leading-none sm:text-[21px]">
                                     {f.depart}
                                   </p>
                                   <p className="mt-1.5 text-[12px] font-semibold">
                                     {f.fromCode} · {leg.from.city}
                                   </p>
-                                  <p className="text-[11px] text-muted-foreground">
+                                  <p className="hidden text-[11px] text-muted-foreground sm:block">
                                     Terminal {facts.terminalFrom} · {leg.dates}
                                   </p>
                                 </div>
 
                                 <div className="flex min-w-0 flex-1 flex-col">
                                   <p className="mb-1 text-center text-[11px] font-semibold text-muted-foreground">
-                                    {f.duration} ·{" "}
-                                    {f.stops === 0
-                                      ? "Non-stop"
-                                      : `${f.stops} stop${f.stops > 1 ? "s" : ""}`}
+                                    {f.duration} · {f.stops === 0 ? "Non-stop" : `${f.stops} stop${f.stops > 1 ? "s" : ""}`}
                                   </p>
                                   <div className="relative flex items-center">
                                     <span className="size-2 rounded-full bg-primary" />
@@ -451,49 +435,46 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                                   </p>
                                 </div>
 
-                                <div className="sm:text-right">
-                                  <p className="font-display text-[24px] font-semibold leading-none tracking-tight">
+                                <div className="min-w-0 text-right">
+                                  <p className="font-display text-[19px] font-semibold leading-none sm:text-[21px]">
                                     {f.arrive}
                                   </p>
                                   <p className="mt-1.5 text-[12px] font-semibold">
                                     {f.toCode} · {leg.to.city}
                                   </p>
-                                  <p className="text-[11px] text-muted-foreground">
+                                  <p className="hidden text-[11px] text-muted-foreground sm:block">
                                     Terminal {facts.terminalTo} · same day
                                   </p>
                                 </div>
                               </div>
 
-                              <div className="mt-3 flex flex-wrap items-center gap-2">
+                              <div className="mt-1.5 flex flex-wrap items-center gap-1 sm:mt-2 sm:gap-1.5">
                                 <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                                   <Briefcase className="size-3" /> {f.baggage} checked
                                 </span>
-                                <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                                <span className="hidden items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                                   <Luggage className="size-3" /> 7kg cabin
                                 </span>
                                 <span
                                   className={cn(
                                     "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium",
-                                    f.refundable
-                                      ? "bg-primary/10 text-primary"
-                                      : "bg-secondary/80 text-muted-foreground",
+                                    f.refundable ? "bg-primary/10 text-primary" : "bg-secondary/80 text-muted-foreground",
                                   )}
                                 >
-                                  {f.refundable ? (
-                                    <ShieldCheck className="size-3" />
-                                  ) : (
-                                    <Ban className="size-3" />
-                                  )}
+                                  {f.refundable ? <ShieldCheck className="size-3" /> : <Ban className="size-3" />}
                                   {f.refundable ? "Refundable" : "Saver fare"}
                                 </span>
-                                <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                                <span className="hidden items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                                   <Utensils className="size-3" /> Meals included
                                 </span>
                                 {f.refundable ? (
-                                  <span className="flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold-foreground">
+                                  <span className="hidden items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold-foreground">
                                     <CalendarClock className="size-3" /> Changes allowed
                                   </span>
                                 ) : null}
+                                <span className="hidden items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
+                                  Class {String.fromCharCode(65 + (facts.pnrHint.charCodeAt(3) % 20))}
+                                </span>
                               </div>
                             </div>
                           );
@@ -502,31 +483,38 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
 
                       <div
                         className={cn(
-                          "flex items-end justify-between gap-4 border-t border-border/70 p-4 md:flex-col md:items-stretch md:justify-center md:gap-3 md:border-l md:border-t-0 md:bg-secondary/25 md:p-5",
+                          "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-t border-border/70 md:flex md:flex-col md:items-stretch md:justify-center md:border-l md:border-t-0 md:bg-secondary/25",
+                          "p-2.5 md:gap-2.5 md:p-4",
                           best ? "md:pt-9" : "",
                         )}
                       >
                         <div className="text-left md:text-right">
                           <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            Total fare
+                            {channel === "agent" ? "Agent fare" : "Total fare"}
                           </p>
-                          <p className="font-display text-[25px] font-bold leading-none tracking-tight">
-                            {money(c.price)}
-                          </p>
-                          <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[12px] font-semibold md:justify-end">
-                            <span className="text-muted-foreground line-through">
-                              {money(c.listPrice)}
-                            </span>
-                            <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[10.5px] font-semibold text-foreground/80">
-                              Save {money(c.saving)} ({c.discountPct}%)
-                            </span>
+                          <p className={cn("font-display font-bold leading-none", channel === "agent" ? "text-[19px] sm:text-[22px]" : "text-[21px] sm:text-[25px]")}>{money(c.price)}</p>
+                          <p className="mt-1 hidden flex-wrap items-center gap-1.5 text-[12px] font-semibold sm:flex md:justify-end">
+                            {channel === "agent" ? (
+                              <>
+                                <span className="text-muted-foreground">Customer fare {money(c.listPrice)}</span>
+                                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10.5px] font-semibold text-primary">
+                                   Reward +{Math.max(1, Math.round(c.saving / 100))} pts
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-muted-foreground line-through">{money(c.listPrice)}</span>
+                                <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[10.5px] font-semibold text-foreground/80">
+                                  Save {money(c.saving)} ({c.discountPct}%)
+                                </span>
+                              </>
+                            )}
                           </p>
                           <p className="text-[11px] text-muted-foreground">
-                            {legs.length} flights · {totalPax} passenger{totalPax > 1 ? "s" : ""} ·
-                            incl. taxes
+                            {legs.length} flights · {totalPax} passenger{totalPax > 1 ? "s" : ""} · incl. taxes
                           </p>
                         </div>
-                        <div className="flex w-auto flex-col gap-2 md:w-full">
+                        <div className="flex w-auto items-stretch gap-1.5 md:w-full md:flex-col md:gap-2">
                           <button
                             onClick={() => {
                               setSelected(c.id);
@@ -534,10 +522,8 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                             }}
                             aria-haspopup="dialog"
                             className={cn(
-                              "flex items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 font-display text-[13px] font-semibold shadow-soft transition-all duration-300 hover:shadow-float active:scale-[0.98]",
-                              isSelected
-                                ? "bg-primary/10 text-primary ring-1 ring-primary"
-                                : "bg-forest text-primary-foreground",
+                               "flex items-center justify-center gap-1 rounded-lg px-3 py-2 font-display text-[12px] font-semibold shadow-soft transition-all duration-300 hover:shadow-float active:scale-[0.98] sm:px-4 sm:text-[13px]",
+                              isSelected ? "bg-primary/10 text-primary ring-1 ring-primary" : "bg-forest text-primary-foreground",
                             )}
                           >
                             {isSelected ? <Check className="size-3.5" /> : null}
@@ -551,13 +537,13 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                             }}
                             aria-expanded={isOpen}
                             className={cn(
-                              "flex items-center justify-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-semibold transition-colors",
+                              "flex items-center justify-center gap-1 rounded-lg border px-2.5 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-[12px]",
                               isOpen
                                 ? "border-primary bg-primary/5 text-primary"
                                 : "border-border bg-card text-muted-foreground hover:text-foreground",
                             )}
                           >
-                            <Receipt className="size-3.5" /> {isOpen ? "Hide details" : "Details"}
+                             <Receipt className="size-3.5" /> {isOpen ? "Hide details" : "Flight details"}
                           </button>
                           <p className="hidden text-center text-[10.5px] text-muted-foreground md:block">
                             Free cancellation within 24h
@@ -566,8 +552,8 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                       </div>
                     </div>
 
-                    <div className="border-t border-border/70 px-4 md:px-5">
-                      <div className="flex items-center gap-1 py-2">
+                    <div className={cn("border-t border-border/70 px-3 md:px-5", !isOpen && "hidden")}>
+                      <div className="flex items-center gap-1 py-1.5 sm:py-2">
                         <button
                           onClick={() => {
                             if (isOpen && detailTab === "rules") setDetailTab("breakdown");
@@ -610,39 +596,30 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                           {detailTab === "breakdown" ? (
                             <div className="grid gap-3 md:grid-cols-2">
                               {c.fares.map((f, i) => (
-                                <div
-                                  key={`bd-${c.id}-${i}`}
-                                  className="rounded-xl bg-secondary/60 p-3.5"
-                                >
+                                <div key={`bd-${c.id}-${i}`} className="rounded-xl bg-secondary/60 p-3.5">
                                   <p className="mb-2 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                                     {legs[i]!.label} · {f.fromCode} → {f.toCode}
                                   </p>
                                   <div className="grid gap-1.5">
+                                    <p className="rounded-lg bg-card/70 p-2 text-[11.5px] text-muted-foreground">
+                                      {flightFacts(f).aircraft} · {f.cabin} · Class {String.fromCharCode(65 + (flightFacts(f).pnrHint.charCodeAt(3) % 20))} · {mealFor(f.cabin)}
+                                    </p>
                                     {fareBreakdown(f, pax).map((r) => (
-                                      <div
-                                        key={r.label}
-                                        className="flex items-baseline justify-between gap-3 text-[12.5px]"
-                                      >
+                                      <div key={r.label} className="flex items-baseline justify-between gap-3 text-[12.5px]">
                                         <span className="text-muted-foreground">{r.label}</span>
                                         <span className="font-medium">{money(r.value)}</span>
                                       </div>
                                     ))}
                                     <div className="mt-1 flex items-baseline justify-between gap-3 border-t border-border/70 pt-2">
                                       <span className="text-[12.5px] font-semibold">Leg total</span>
-                                      <span className="font-display text-[14px] font-bold">
-                                        {money(f.price)}
-                                      </span>
+                                      <span className="font-display text-[14px] font-bold">{money(f.price)}</span>
                                     </div>
                                   </div>
                                 </div>
                               ))}
                               <div className="flex items-center justify-between gap-3 rounded-xl bg-forest px-4 py-3 text-primary-foreground md:col-span-2">
-                                <span className="font-display text-[13px] font-semibold">
-                                  Total payable
-                                </span>
-                                <span className="font-display text-[18px] font-bold">
-                                  {money(c.price)}
-                                </span>
+                                <span className="font-display text-[13px] font-semibold">Total payable</span>
+                                <span className="font-display text-[18px] font-bold">{money(c.price)}</span>
                               </div>
                             </div>
                           ) : (
@@ -662,14 +639,8 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
                                       detail: mealFor(c.fares[0]!.cabin),
                                     },
                                   ].map((r) => (
-                                    <div
-                                      key={r.label}
-                                      className="flex items-start gap-2.5 rounded-lg bg-card/60 p-2.5"
-                                    >
-                                      <r.icon
-                                        className="mt-0.5 size-4 shrink-0 text-primary"
-                                        strokeWidth={1.9}
-                                      />
+                                    <div key={r.label} className="flex items-start gap-2.5 rounded-lg bg-card/60 p-2.5">
+                                      <r.icon className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.9} />
                                       <span className="text-[12px]">
                                         <span className="block font-semibold">{r.label}</span>
                                         <span className="text-muted-foreground">{r.detail}</span>
@@ -697,6 +668,7 @@ export function MergedFlightResults({ legs, pax, cabin, loading, sectionId }: Pr
         onClose={() => setBooking(null)}
         pax={pax}
         cabin={cabin}
+        channel={channel}
       />
     </section>
   );

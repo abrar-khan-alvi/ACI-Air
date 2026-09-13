@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
@@ -32,6 +34,7 @@ import {
   money,
   type Fare,
 } from "@/lib/fare-details";
+import { applyChannel, commissionOf, customerPriceOf, type FareChannel } from "@/lib/fare-channel";
 import { BookingDrawer } from "./BookingDrawer";
 
 type Props = {
@@ -43,6 +46,7 @@ type Props = {
   loading: boolean;
   legLabel?: string;
   sectionId?: string;
+  channel?: FareChannel;
   onClose?: (() => void) | undefined;
 };
 
@@ -70,24 +74,17 @@ function AirlineLogo({ airline }: { airline: string }) {
     .slice(0, 2)
     .toUpperCase();
   return (
-    <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-teal font-display text-[13px] font-bold text-primary-foreground shadow-soft">
+    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-teal font-display text-[11px] font-bold text-primary-foreground shadow-soft sm:size-10 sm:text-[12px]">
       {initials}
     </span>
   );
 }
 
-export function FlightResults({
-  from,
-  to,
-  dates,
-  pax,
-  cabin,
-  loading,
-  legLabel,
-  sectionId,
-  onClose,
-}: Props) {
-  const all = useMemo(() => buildFlightResults(from, to, pax, cabin), [from, to, pax, cabin]);
+export function FlightResults({ from, to, dates, pax, cabin, loading, legLabel, sectionId, channel = "b2c", onClose }: Props) {
+  const all = useMemo(
+    () => buildFlightResults(from, to, pax, cabin).map((f) => applyChannel(f, channel)),
+    [from, to, pax, cabin, channel],
+  );
 
   const minPrice = all[0]?.price ?? 0;
   const maxPrice = all.reduce((m, f) => Math.max(m, f.price), 0);
@@ -136,11 +133,7 @@ export function FlightResults({
   }, [all, stops, airlines, refundOnly, budget, slots, sort]);
 
   const activeCount =
-    (stops !== "any" ? 1 : 0) +
-    airlines.length +
-    slots.length +
-    (refundOnly ? 1 : 0) +
-    (budget < maxPrice ? 1 : 0);
+    (stops !== "any" ? 1 : 0) + airlines.length + slots.length + (refundOnly ? 1 : 0) + (budget < maxPrice ? 1 : 0);
 
   const reset = () => {
     setStops("any");
@@ -158,18 +151,9 @@ export function FlightResults({
   const filters = (
     <div className="grid gap-4">
       <div>
-        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Stops
-        </p>
+        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Stops</p>
         <div className="flex flex-wrap gap-1.5">
-          {(
-            [
-              ["any", "Any"],
-              [0, "Non-stop"],
-              [1, "1 stop"],
-              [2, "2+ stops"],
-            ] as const
-          ).map(([id, label]) => (
+          {([["any", "Any"], [0, "Non-stop"], [1, "1 stop"], [2, "2+ stops"]] as const).map(([id, label]) => (
             <button
               key={String(id)}
               onClick={() => setStops(id as StopFilter)}
@@ -210,9 +194,7 @@ export function FlightResults({
 
       <div>
         <div className="mb-1.5 flex items-center justify-between">
-          <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Max price
-          </p>
+          <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Max price</p>
           <span className="font-display text-[12px] font-semibold">{money(budget)}</span>
         </div>
         <input
@@ -232,15 +214,10 @@ export function FlightResults({
       </div>
 
       <div>
-        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Airlines
-        </p>
+        <p className="mb-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Airlines</p>
         <div className="grid gap-1">
           {airlineList.map(([name, price]) => (
-            <label
-              key={name}
-              className="flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 hover:bg-secondary/60"
-            >
+            <label key={name} className="flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 hover:bg-secondary/60">
               <input
                 type="checkbox"
                 checked={airlines.includes(name)}
@@ -277,8 +254,7 @@ export function FlightResults({
     <section id={sectionId} className="scroll-mt-20">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <p className="text-[12px] font-medium text-muted-foreground">
-          Showing <span className="font-semibold text-foreground">{filtered.length}</span> of{" "}
-          {all.length} fares
+          Showing <span className="font-semibold text-foreground">{filtered.length}</span> of {all.length} fares
         </p>
         {onClose ? (
           <button
@@ -290,7 +266,7 @@ export function FlightResults({
         ) : null}
       </div>
 
-      <div className="mt-3 grid gap-4 lg:grid-cols-[236px_minmax(0,1fr)] lg:items-start">
+      <div className="mt-3 grid gap-4 lg:grid-cols-[210px_minmax(0,1fr)] lg:items-start">
         <aside className="surface-card sticky top-[68px] hidden rounded-xl p-3.5 lg:block">
           <p className="mb-3 flex items-center gap-1.5 font-display text-[13px] font-semibold">
             <Filter className="size-3.5 text-primary" /> Filters
@@ -318,9 +294,7 @@ export function FlightResults({
                   onClick={() => setSort(s.id)}
                   className={cn(
                     "rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors",
-                    sort === s.id
-                      ? "bg-card text-foreground shadow-soft"
-                      : "text-muted-foreground hover:text-foreground",
+                    sort === s.id ? "bg-card text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {s.label}
@@ -329,17 +303,33 @@ export function FlightResults({
             </div>
           </div>
 
-          {openMobile ? (
-            <div className="surface-card mb-3 rounded-xl p-3.5 lg:hidden">{filters}</div>
-          ) : null}
+          <div className="no-scrollbar mb-2 flex gap-2 overflow-x-auto pb-1">
+              {airlineList.slice(0, 4).map(([name, price]) => (
+                <button
+                  key={name}
+                  onClick={() => setAirlines(airlines.includes(name) ? [] : [name])}
+                  className={cn(
+                    "grid min-w-[132px] grid-cols-[28px_minmax(0,1fr)] items-center gap-2 rounded-lg border bg-card px-2.5 py-2 text-left shadow-soft transition",
+                    airlines.includes(name) ? "border-primary ring-1 ring-primary/20" : "border-border hover:border-primary/35",
+                  )}
+                >
+                  <span className="grid size-7 place-items-center rounded-md bg-primary/10 text-[9px] font-bold text-primary">
+                    {name.split(" ").map((word) => word[0]).join("").slice(0, 2)}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[10.5px] font-semibold">{name}</span>
+                    <span className="block text-[11px] text-muted-foreground">from {money(price)}</span>
+                  </span>
+                </button>
+              ))}
+          </div>
+
+          {openMobile ? <div className="surface-card mb-3 rounded-xl p-3.5 lg:hidden">{filters}</div> : null}
 
           {loading ? (
-            <div className="grid gap-3">
+          <div className="grid gap-2 sm:gap-3">
               {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-[214px] animate-pulse rounded-2xl border border-border/60 bg-secondary/50"
-                />
+                <div key={i} className="h-[214px] animate-pulse rounded-2xl border border-border/60 bg-secondary/50" />
               ))}
               <p className="flex items-center gap-2 text-[12px] text-muted-foreground">
                 <Loader2 className="size-3.5 animate-spin" /> Searching live fares…
@@ -348,9 +338,7 @@ export function FlightResults({
           ) : filtered.length === 0 ? (
             <div className="surface-card grid place-items-center gap-2 rounded-xl p-8 text-center">
               <p className="font-display text-[14px] font-semibold">No fares match these filters</p>
-              <p className="text-[12px] text-muted-foreground">
-                Try widening your price range or clearing stops.
-              </p>
+              <p className="text-[12px] text-muted-foreground">Try widening your price range or clearing stops.</p>
               <button
                 onClick={reset}
                 className="mt-1 rounded-lg bg-forest px-4 py-2 text-[12.5px] font-semibold text-primary-foreground"
@@ -369,7 +357,8 @@ export function FlightResults({
                   <article
                     key={f.id}
                     className={cn(
-                      "surface-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-float hover:ring-1 hover:ring-primary/25",
+                      "surface-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-float hover:ring-1 hover:ring-primary/25",
+                      "rounded-xl",
                       best && !isSelected && "ring-1 ring-primary/30",
                       isSelected && "ring-2 ring-primary shadow-float -translate-y-0.5",
                     )}
@@ -383,21 +372,27 @@ export function FlightResults({
                       </span>
                     ) : null}
 
-                    <div className="grid gap-5 p-4 md:grid-cols-[minmax(0,1fr)_248px] md:gap-0 md:p-0">
-                      <div className="min-w-0 md:p-5">
-                        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
-                          <div className="flex min-w-0 items-center gap-3">
+                    <div className={cn("hidden items-center justify-between gap-2 border-b border-border/60 bg-secondary/25 px-3 py-2 sm:flex sm:px-4", best && "sm:pr-28")}>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-teal/10 px-2 py-1 text-[10.5px] font-semibold text-teal">
+                          <Clock className="size-3" /> Book & hold
+                        </span>
+                        <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10.5px] font-semibold", f.refundable ? "bg-teal/10 text-teal" : "bg-secondary text-muted-foreground")}>
+                          {f.refundable ? <ShieldCheck className="size-3" /> : <Ban className="size-3" />}
+                          {f.refundable ? "Refundable" : "Non-refundable"}
+                        </span>
+                    </div>
+
+                    <div className="grid md:grid-cols-[minmax(0,1fr)_230px]">
+                      <div className="min-w-0 p-2.5 sm:p-4">
+                        <div className={cn("grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2", best && "pr-20 sm:pr-0")}>
+                          <div className="flex min-w-0 items-center gap-2.5">
                             <AirlineLogo airline={f.airline} />
                             <span className="min-w-0">
-                              <span className="block truncate font-display text-[15px] font-semibold">
-                                {f.airline}
-                              </span>
-                              <span className="block truncate text-[12px] text-muted-foreground">
-                                {f.code} · {f.cabin} · {facts.aircraft}
-                              </span>
+                              <span className="block truncate font-display text-[14px] font-semibold sm:text-[15px]">{f.airline}</span>
+                              <span className="block truncate text-[11px] text-muted-foreground sm:text-[12px]">{f.code}</span>
                             </span>
                           </div>
-                          <div className="flex flex-wrap items-center gap-1.5">
+                          <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
                             <span className="flex items-center gap-1 rounded-full bg-secondary/70 px-2 py-1 text-[10.5px] font-semibold text-muted-foreground">
                               <Clock className="size-3" /> {facts.onTime}% on-time
                             </span>
@@ -407,25 +402,15 @@ export function FlightResults({
                           </div>
                         </div>
 
-                        <div className="mt-4 grid items-center gap-3 rounded-xl bg-secondary/35 p-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-5 sm:p-4">
+                        <div className="mt-2 grid grid-cols-[minmax(64px,auto)_minmax(74px,1fr)_minmax(64px,auto)] items-center gap-1.5 rounded-lg bg-secondary/35 p-2 sm:mt-3 sm:gap-4 sm:rounded-xl sm:p-3">
                           <div className="sm:text-left">
-                            <p className="font-display text-[24px] font-semibold leading-none tracking-tight">
-                              {f.depart}
-                            </p>
-                            <p className="mt-1.5 text-[12px] font-semibold">
-                              {f.fromCode} · {from.city}
-                            </p>
-                            <p className="text-[11px] text-muted-foreground">
-                              Terminal {facts.terminalFrom} · {dates}
-                            </p>
+                            <p className="font-display text-[19px] font-semibold leading-none sm:text-[21px]">{f.depart}</p>
+                            <p className="mt-1 text-[11px] font-semibold sm:mt-1.5 sm:text-[12px]">{f.fromCode} · {from.city}</p>
                           </div>
 
                           <div className="flex min-w-0 flex-1 flex-col">
                             <p className="mb-1 text-center text-[11px] font-semibold text-muted-foreground">
-                              {f.duration} ·{" "}
-                              {f.stops === 0
-                                ? "Non-stop"
-                                : `${f.stops} stop${f.stops > 1 ? "s" : ""}`}
+                              {f.duration} · {f.stops === 0 ? "Non-stop" : `${f.stops} stop${f.stops > 1 ? "s" : ""}`}
                             </p>
                             <div className="relative flex items-center">
                               <span className="size-2 rounded-full bg-primary" />
@@ -459,78 +444,78 @@ export function FlightResults({
                             </p>
                           </div>
 
-                          <div className="sm:text-right">
-                            <p className="font-display text-[24px] font-semibold leading-none tracking-tight">
-                              {f.arrive}
-                            </p>
-                            <p className="mt-1.5 text-[12px] font-semibold">
-                              {f.toCode} · {to.city}
-                            </p>
-                            <p className="text-[11px] text-muted-foreground">
-                              Terminal {facts.terminalTo} · same day
-                            </p>
+                          <div className="min-w-0 text-right">
+                            <p className="font-display text-[19px] font-semibold leading-none sm:text-[21px]">{f.arrive}</p>
+                            <p className="mt-1 text-[11px] font-semibold sm:mt-1.5 sm:text-[12px]">{f.toCode} · {to.city}</p>
                           </div>
                         </div>
 
-                        <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1 sm:mt-2 sm:gap-1.5">
                           <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                             <Briefcase className="size-3" /> {f.baggage} checked
                           </span>
-                          <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                          <span className="hidden items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                             <Luggage className="size-3" /> 7kg cabin
                           </span>
                           <span
                             className={cn(
                               "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium",
-                              f.refundable
-                                ? "bg-primary/10 text-primary"
-                                : "bg-secondary/80 text-muted-foreground",
+                              f.refundable ? "bg-primary/10 text-primary" : "bg-secondary/80 text-muted-foreground",
                             )}
                           >
-                            {f.refundable ? (
-                              <ShieldCheck className="size-3" />
-                            ) : (
-                              <Ban className="size-3" />
-                            )}
+                            {f.refundable ? <ShieldCheck className="size-3" /> : <Ban className="size-3" />}
                             {f.refundable ? "Refundable" : "Saver fare"}
                           </span>
-                          <span className="flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                          <span className="hidden items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                             <Utensils className="size-3" /> Meals included
                           </span>
                           {f.refundable ? (
-                            <span className="flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold-foreground">
+                            <span className="hidden items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-medium text-gold-foreground">
                               <CalendarClock className="size-3" /> Changes allowed
                             </span>
                           ) : null}
+                          <span className="hidden items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
+                            Class {String.fromCharCode(65 + (facts.pnrHint.charCodeAt(3) % 20))}
+                          </span>
                         </div>
                       </div>
 
                       <div
                         className={cn(
-                          "flex items-end justify-between gap-4 border-t border-border/70 pt-4 md:flex-col md:items-stretch md:justify-center md:gap-3 md:border-l md:border-t-0 md:bg-secondary/25 md:p-5",
+                          "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-t border-border/70 md:flex md:flex-col md:items-stretch md:justify-center md:border-l md:border-t-0 md:bg-secondary/25",
+                          "p-2.5 md:gap-2.5 md:p-4",
                           best ? "md:pt-9" : "md:pt-5",
                         )}
                       >
                         <div className="text-left md:text-right">
                           <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            Total fare
+                            {channel === "agent" ? "Agent fare" : "Total fare"}
                           </p>
-                          <p className="font-display text-[26px] font-bold leading-none tracking-tight text-foreground">
+                          <p className={cn("font-display font-bold leading-none text-foreground", channel === "agent" ? "text-[19px] sm:text-[22px]" : "text-[21px] sm:text-[26px]")}>
                             {money(f.price)}
                           </p>
-                          <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[12px] font-semibold md:justify-end">
-                            <span className="text-muted-foreground line-through">
-                              {money(facts.listPrice)}
-                            </span>
-                            <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[10.5px] font-semibold text-foreground/80">
-                              Save {money(facts.saving)} ({facts.discountPct}%)
-                            </span>
-                          </p>
-                          <p className="text-[11px] text-muted-foreground">
+                          {channel === "agent" ? (
+                            <p className="mt-1 flex flex-wrap items-center gap-1 text-[10px] font-semibold sm:text-[12px] md:justify-end">
+                              <span className="text-muted-foreground">
+                                Customer fare {money(customerPriceOf(f))}
+                              </span>
+                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10.5px] font-semibold text-primary">
+                                Reward +{Math.max(1, Math.round(commissionOf(f) / 100))} pts
+                              </span>
+                            </p>
+                          ) : (
+                            <p className="mt-1 hidden flex-wrap items-center gap-1.5 text-[12px] font-semibold sm:flex md:justify-end">
+                              <span className="text-muted-foreground line-through">{money(facts.listPrice)}</span>
+                              <span className="rounded-full bg-clay/15 px-2 py-0.5 text-[10.5px] font-semibold text-foreground/80">
+                                Save {money(facts.saving)} ({facts.discountPct}%)
+                              </span>
+                            </p>
+                          )}
+                          <p className="text-[10px] text-muted-foreground sm:text-[11px]">
                             {totalPax} passenger{totalPax > 1 ? "s" : ""} · incl. taxes
                           </p>
                         </div>
-                        <div className="flex w-auto flex-col gap-2 md:w-full">
+                        <div className="flex w-auto items-stretch gap-1.5 md:w-full md:flex-col md:gap-2">
                           <button
                             onClick={() => {
                               setSelected(f.id);
@@ -538,7 +523,7 @@ export function FlightResults({
                             }}
                             aria-haspopup="dialog"
                             className={cn(
-                              "flex items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 font-display text-[13px] font-semibold shadow-soft transition-all duration-300 hover:shadow-float active:scale-[0.98]",
+                              "flex items-center justify-center gap-1 rounded-lg px-3 py-2 font-display text-[12px] font-semibold shadow-soft transition-all duration-300 hover:shadow-float active:scale-[0.98] sm:px-4 sm:text-[13px]",
                               isSelected
                                 ? "bg-primary/10 text-primary ring-1 ring-primary"
                                 : "bg-forest text-primary-foreground",
@@ -555,13 +540,13 @@ export function FlightResults({
                             }}
                             aria-expanded={isOpen}
                             className={cn(
-                              "flex items-center justify-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-semibold transition-colors",
+                              "flex items-center justify-center gap-1 rounded-lg border px-2.5 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-[12px]",
                               isOpen
                                 ? "border-primary bg-primary/5 text-primary"
                                 : "border-border bg-card text-muted-foreground hover:text-foreground",
                             )}
                           >
-                            <Receipt className="size-3.5" /> {isOpen ? "Hide details" : "Details"}
+                            <Receipt className="size-3.5" /> {isOpen ? "Hide details" : "Flight details"}
                           </button>
                           <p className="hidden text-center text-[10.5px] text-muted-foreground md:block">
                             Free cancellation within 24h
@@ -570,8 +555,8 @@ export function FlightResults({
                       </div>
                     </div>
 
-                    <div className="border-t border-border/70 px-4 md:px-5">
-                      <div className="flex items-center gap-1 py-2">
+                    <div className={cn("border-t border-border/70 px-3 md:px-5", !isOpen && "hidden")}>
+                      <div className="flex items-center gap-1 py-1.5 sm:py-2">
                         <button
                           onClick={() => {
                             if (isOpen && detailTab === "rules") setDetailTab("breakdown");
@@ -619,26 +604,26 @@ export function FlightResults({
                                 </p>
                                 <div className="grid gap-1.5">
                                   {fareBreakdown(f, pax).map((r) => (
-                                    <div
-                                      key={r.label}
-                                      className="flex items-baseline justify-between gap-3 text-[12.5px]"
-                                    >
+                                    <div key={r.label} className="flex items-baseline justify-between gap-3 text-[12.5px]">
                                       <span className="text-muted-foreground">{r.label}</span>
                                       <span className="font-medium">{money(r.value)}</span>
                                     </div>
                                   ))}
                                   <div className="mt-1 flex items-baseline justify-between gap-3 border-t border-border/70 pt-2">
-                                    <span className="text-[12.5px] font-semibold">
-                                      Total payable
-                                    </span>
-                                    <span className="font-display text-[15px] font-bold">
-                                      {money(f.price)}
-                                    </span>
+                                    <span className="text-[12.5px] font-semibold">Total payable</span>
+                                    <span className="font-display text-[15px] font-bold">{money(f.price)}</span>
                                   </div>
                                 </div>
                               </div>
 
                               <div className="grid content-start gap-2.5">
+                                <div className="flex items-start gap-2.5 rounded-xl bg-secondary/60 p-3">
+                                  <Plane className="mt-0.5 size-4 shrink-0 text-primary" />
+                                  <span className="text-[12.5px]">
+                                    <span className="block font-semibold">Flight information</span>
+                                    <span className="text-muted-foreground">{facts.aircraft} · Terminal {facts.terminalFrom} to {facts.terminalTo} · {facts.onTime}% on-time · {facts.seatsLeft} seats left</span>
+                                  </span>
+                                </div>
                                 <div className="flex items-start gap-2.5 rounded-xl bg-secondary/60 p-3">
                                   <Briefcase className="mt-0.5 size-4 shrink-0 text-primary" />
                                   <span className="text-[12.5px]">
@@ -652,18 +637,14 @@ export function FlightResults({
                                   <Utensils className="mt-0.5 size-4 shrink-0 text-primary" />
                                   <span className="text-[12.5px]">
                                     <span className="block font-semibold">Meals</span>
-                                    <span className="text-muted-foreground">
-                                      {mealFor(f.cabin)}
-                                    </span>
+                                    <span className="text-muted-foreground">{mealFor(f.cabin)}</span>
                                   </span>
                                 </div>
                                 <div className="flex items-start gap-2.5 rounded-xl bg-secondary/60 p-3">
                                   <Info className="mt-0.5 size-4 shrink-0 text-primary" />
                                   <span className="text-[12.5px]">
                                     <span className="block font-semibold">Booking class</span>
-                                    <span className="text-muted-foreground">
-                                      {f.cabin} · {f.code}
-                                    </span>
+                                    <span className="text-muted-foreground">{f.cabin} · {f.code}</span>
                                   </span>
                                 </div>
                               </div>
@@ -686,14 +667,8 @@ export function FlightResults({
                                     { icon: Briefcase, ...rules.checked },
                                     { icon: Plane, ...rules.noShow },
                                   ].map((r) => (
-                                    <div
-                                      key={r.label}
-                                      className="flex items-start gap-2.5 rounded-lg bg-card/60 p-2.5"
-                                    >
-                                      <r.icon
-                                        className="mt-0.5 size-4 shrink-0 text-primary"
-                                        strokeWidth={1.9}
-                                      />
+                                    <div key={r.label} className="flex items-start gap-2.5 rounded-lg bg-card/60 p-2.5">
+                                      <r.icon className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.9} />
                                       <span className="text-[12px]">
                                         <span className="block font-semibold">{r.label}</span>
                                         <span className="text-muted-foreground">{r.detail}</span>
@@ -717,12 +692,15 @@ export function FlightResults({
 
       <BookingDrawer
         itinerary={
-          booking ? [{ fare: booking, from, to, dates, label: legLabel ?? "Review booking" }] : null
+          booking
+            ? [{ fare: booking, from, to, dates, label: legLabel ?? "Review booking" }]
+            : null
         }
         open={booking !== null}
         onClose={() => setBooking(null)}
         pax={pax}
         cabin={cabin}
+        channel={channel}
       />
     </section>
   );

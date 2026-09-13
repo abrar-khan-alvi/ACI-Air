@@ -1,13 +1,22 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Users, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { cabinClasses, paxLabel, paxTotal, type CabinClass, type Pax } from "@/lib/flight-results";
+import {
+  cabinClasses,
+  paxLabel,
+  paxTotal,
+  type CabinClass,
+  type Pax,
+} from "@/lib/flight-results";
 
 type Props = {
   pax: Pax;
   cabin: CabinClass;
   onPax: (p: Pax) => void;
   onCabin: (c: CabinClass) => void;
+  panel?: boolean;
 };
 
 const rows: { key: keyof Pax; label: string; hint: string; min: number }[] = [
@@ -16,7 +25,7 @@ const rows: { key: keyof Pax; label: string; hint: string; min: number }[] = [
   { key: "infants", label: "Infants", hint: "Under 2, on lap", min: 0 },
 ];
 
-export function PassengerField({ pax, cabin, onPax, onCabin }: Props) {
+export function PassengerField({ pax, cabin, onPax, onCabin, panel = false }: Props) {
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -44,18 +53,14 @@ export function PassengerField({ pax, cabin, onPax, onCabin }: Props) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex items-center gap-1.5 rounded-full bg-secondary/80 px-3 py-1.5 text-[12px] font-semibold transition-colors",
-          open ? "ring-2 ring-primary/30" : "hover:bg-secondary",
+          "flex items-center gap-1.5 font-semibold text-foreground transition-colors",
+          panel ? "w-full justify-between bg-transparent p-0 text-left text-[13px]" : "rounded-full bg-secondary/80 px-3 py-1.5 text-[12px]",
+          open ? (panel ? "text-primary" : "ring-2 ring-primary/30") : panel ? "hover:text-primary" : "hover:bg-secondary",
         )}
       >
-        <Users className="size-3.5 text-muted-foreground" />
+        {!panel ? <Users className="size-3.5 text-muted-foreground" /> : null}
         {total} {total > 1 ? "travellers" : "traveller"} · {cabin}
-        <ChevronDown
-          className={cn(
-            "size-3.5 text-muted-foreground transition-transform",
-            open && "rotate-180",
-          )}
-        />
+        <ChevronDown className={cn("size-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
       </button>
 
       {open ? (
@@ -105,9 +110,7 @@ export function PassengerField({ pax, cabin, onPax, onCabin }: Props) {
                   onClick={() => onCabin(c)}
                   className={cn(
                     "flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-colors",
-                    cabin === c
-                      ? "bg-secondary font-semibold text-foreground"
-                      : "text-muted-foreground hover:bg-secondary/60",
+                    cabin === c ? "bg-secondary font-semibold text-foreground" : "text-muted-foreground hover:bg-secondary/60",
                   )}
                 >
                   {c}

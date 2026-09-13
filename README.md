@@ -1,56 +1,58 @@
-# ACI Avionics — B2B Travel Portal
+# B2B ACI Avionics Frontend
 
-A B2B travel booking portal for flights and hotels, built with TanStack Start (SSR), TypeScript, React, and Tailwind CSS.
-
-## Tech Stack
-
-- [TanStack Start](https://tanstack.com/start) — SSR framework
-- [TanStack Router](https://tanstack.com/router) — type-safe file-based routing
-- [TanStack Query](https://tanstack.com/query) — data fetching and caching
-- [React 19](https://react.dev)
-- [TypeScript](https://www.typescriptlang.org)
-- [Tailwind CSS v4](https://tailwindcss.com)
-- [Radix UI](https://www.radix-ui.com) — accessible UI primitives (shadcn/ui pattern)
-- [Vite](https://vite.dev) — build tool
-- [Bun](https://bun.sh) — package manager
+ACI Air's booking front end — flights, hotels, partner portal and admin console.
 
 ## Development
 
-Requires [Bun](https://bun.sh). Install it first if you haven't:
+Requires Node.js 20+ and [Bun](https://bun.sh) (npm also works).
 
 ```sh
-curl -fsSL https://bun.sh/install | bash
-```
-
-Then:
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
 bun install
 bun run dev
 ```
 
-The development server starts at **http://localhost:8080**.
+The app runs on [http://localhost:3000](http://localhost:3000).
 
-## Available Scripts
+## Scripts
 
-| Command           | Description                  |
-| ----------------- | ---------------------------- |
-| `bun run dev`     | Start the development server |
-| `bun run build`   | Build for production         |
-| `bun run preview` | Preview the production build |
-| `bun run lint`    | Run ESLint                   |
-| `bun run format`  | Format code with Prettier    |
+| Script | Purpose |
+| --- | --- |
+| `bun run dev` | Start the dev server |
+| `bun run build` | Production build |
+| `bun run start` | Serve the production build |
+| `bun run lint` | ESLint |
+| `bun run typecheck` | `tsc --noEmit` |
+| `bun run format` | Prettier |
 
-## Environment Variables
+## Environment
 
-| Variable     | Required | Description                                                                  |
-| ------------ | -------- | ---------------------------------------------------------------------------- |
-| `AI_API_KEY` | Optional | API key for the AI-powered passport OCR scanning feature in the booking flow |
+| Variable | Used by |
+| --- | --- |
+| `LOVABLE_API_KEY` | Passport scanning server action (`src/lib/passport.actions.ts`). Without it, travellers enter details manually. |
 
-Create a `.env` file at the project root to set these locally:
+Set it in `.env.local` for local development.
 
-```sh
-AI_API_KEY=your_key_here
+## Structure
+
 ```
+app/                  App Router routes; each page.tsx exports metadata and
+                      renders a client component alongside it
+  layout.tsx          Root layout, fonts, providers
+  globals.css         Tailwind v4 theme and design tokens
+src/components/ui/    shadcn/ui primitives
+src/components/aci/   Product components
+src/lib/              Domain logic, search-param codecs, server actions
+```
+
+Routes: `/`, `/user`, `/search`, `/hotels`, `/booking`, `/admin`,
+`/partner/login`, `/partner/signup`, `/partner/dashboard`.
+
+Search state lives in the URL. `src/lib/search-params.ts` and `src/lib/hotels.ts`
+parse and validate it; `src/lib/navigation.ts` builds the URLs.
+
+## Built with
+
+- Next.js (App Router) + React
+- TypeScript
+- Tailwind CSS v4 + shadcn/ui
+- TanStack Query

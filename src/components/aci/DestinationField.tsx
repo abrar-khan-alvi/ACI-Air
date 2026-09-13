@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Building2 } from "lucide-react";
 import { searchDestinations, type HotelDestination } from "@/lib/hotels";
@@ -81,9 +83,7 @@ export function DestinationField({ label = "Destination", value, onChange }: Pro
       {open ? (
         <div className="absolute left-0 right-0 top-full z-40 mt-1.5 min-w-[260px] overflow-hidden rounded-xl border border-border/70 bg-popover shadow-float">
           {results.length === 0 ? (
-            <p className="px-3 py-3 text-[12.5px] text-muted-foreground">
-              No stays match “{query}”
-            </p>
+            <p className="px-3 py-3 text-[12.5px] text-muted-foreground">No stays match “{query}”</p>
           ) : (
             <ul className="max-h-72 overflow-y-auto py-1">
               {results.map((d, i) => (

@@ -39,12 +39,7 @@ export const airports: Airport[] = [
   { code: "HKT", name: "Phuket Intl", city: "Phuket", country: "Thailand" },
   { code: "CNX", name: "Chiang Mai Intl", city: "Chiang Mai", country: "Thailand" },
   { code: "KUL", name: "Kuala Lumpur Intl", city: "Kuala Lumpur", country: "Malaysia" },
-  {
-    code: "SZB",
-    name: "Sultan Abdul Aziz Shah (Subang)",
-    city: "Kuala Lumpur",
-    country: "Malaysia",
-  },
+  { code: "SZB", name: "Sultan Abdul Aziz Shah (Subang)", city: "Kuala Lumpur", country: "Malaysia" },
   { code: "CGK", name: "Soekarno–Hatta Intl", city: "Jakarta", country: "Indonesia" },
   { code: "HLP", name: "Halim Perdanakusuma", city: "Jakarta", country: "Indonesia" },
   { code: "DPS", name: "Ngurah Rai Intl", city: "Bali (Denpasar)", country: "Indonesia" },

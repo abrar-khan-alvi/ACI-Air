@@ -1,3 +1,5 @@
+"use client";
+
 import { Bell, Search, Globe, Menu } from "lucide-react";
 
 export function Topbar({ onMenu }: { onMenu: () => void }) {

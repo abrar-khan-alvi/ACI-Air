@@ -1,4 +1,5 @@
 import { airports, cityPlace, placeByCode, type Place } from "./airports";
+import { isFareChannel, type FareChannel } from "./fare-channel";
 import { cabinClasses, type CabinClass, type Pax } from "./flight-results";
 
 export type TripType = "oneway" | "round" | "multi";
@@ -10,6 +11,7 @@ export type FlightSearchParams = {
   children: number;
   infants: number;
   cabin: CabinClass;
+  channel: FareChannel;
 };
 
 export type ParsedLeg = { from: Place; to: Place; date: string };
@@ -61,6 +63,7 @@ export function validateFlightSearch(search: Record<string, unknown>): FlightSea
     children: clampInt(search["children"], 0, 8, 0),
     infants: clampInt(search["infants"], 0, 8, 0),
     cabin: cabinClasses.includes(cabin as CabinClass) ? (cabin as CabinClass) : "Economy",
+    channel: isFareChannel(search["channel"]) ? search["channel"] : "b2c",
   };
 }
 

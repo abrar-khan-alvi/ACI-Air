@@ -56,10 +56,7 @@ export function searchDestinations(query: string, limit = 8): HotelDestination[]
 export type Guests = { rooms: number; adults: number; children: number };
 
 export function guestLabel(g: Guests) {
-  const parts = [
-    `${g.rooms} room${g.rooms > 1 ? "s" : ""}`,
-    `${g.adults} adult${g.adults > 1 ? "s" : ""}`,
-  ];
+  const parts = [`${g.rooms} room${g.rooms > 1 ? "s" : ""}`, `${g.adults} adult${g.adults > 1 ? "s" : ""}`];
   if (g.children) parts.push(`${g.children} child${g.children > 1 ? "ren" : ""}`);
   return parts.join(" · ");
 }
@@ -133,25 +130,10 @@ const brands = [
 
 const suffixes = ["Hotel", "Residences", "Suites", "Retreat", "Grand", "Boutique", "Bay Resort"];
 
-const areasFallback = [
-  "City Centre",
-  "Riverside",
-  "Old Town",
-  "Business District",
-  "Beachfront",
-  "Airport Zone",
-];
+const areasFallback = ["City Centre", "Riverside", "Old Town", "Business District", "Beachfront", "Airport Zone"];
 
 const ratingWords = (r: number) =>
-  r >= 9.2
-    ? "Exceptional"
-    : r >= 8.6
-      ? "Excellent"
-      : r >= 8
-        ? "Very good"
-        : r >= 7.2
-          ? "Good"
-          : "Pleasant";
+  r >= 9.2 ? "Exceptional" : r >= 8.6 ? "Excellent" : r >= 8 ? "Very good" : r >= 7.2 ? "Good" : "Pleasant";
 
 export function ratingLabel(r: number) {
   return ratingWords(r);
@@ -172,8 +154,7 @@ function seedFrom(text: string) {
   };
 }
 
-const pick = <T>(rand: () => number, list: readonly T[]): T =>
-  list[Math.floor(rand() * list.length)]!;
+const pick = <T,>(rand: () => number, list: readonly T[]): T => list[Math.floor(rand() * list.length)]!;
 
 export function nightsBetween(checkin: string, checkout: string) {
   const a = new Date(`${checkin}T00:00:00`).getTime();
@@ -242,7 +223,7 @@ export function buildHotels(dest: HotelDestination, checkin: string): Hotel[] {
       imageIndex: i % 4,
       amenities,
       perNight,
-      strikePerNight: Math.round(perNight / (1 - discount) / 50) * 50,
+      strikePerNight: Math.round((perNight / (1 - discount)) / 50) * 50,
       taxesPerNight: Math.round((perNight * 0.14) / 10) * 10,
       freeCancellation,
       breakfast,

@@ -8,25 +8,12 @@ export function fareBreakdown(f: Fare, pax: Pax) {
   const baseAdult = Math.round(f.perAdult / 1.18);
   const taxAdult = f.perAdult - baseAdult;
   const rows = [
-    {
-      label: `Base fare · ${pax.adults} adult${pax.adults > 1 ? "s" : ""}`,
-      value: baseAdult * pax.adults,
-    },
+    { label: `Base fare · ${pax.adults} adult${pax.adults > 1 ? "s" : ""}`, value: baseAdult * pax.adults },
     ...(pax.children
-      ? [
-          {
-            label: `Base fare · ${pax.children} child${pax.children > 1 ? "ren" : ""}`,
-            value: Math.round(baseAdult * 0.75) * pax.children,
-          },
-        ]
+      ? [{ label: `Base fare · ${pax.children} child${pax.children > 1 ? "ren" : ""}`, value: Math.round(baseAdult * 0.75) * pax.children }]
       : []),
     ...(pax.infants
-      ? [
-          {
-            label: `Base fare · ${pax.infants} infant${pax.infants > 1 ? "s" : ""}`,
-            value: Math.round(baseAdult * 0.1) * pax.infants,
-          },
-        ]
+      ? [{ label: `Base fare · ${pax.infants} infant${pax.infants > 1 ? "s" : ""}`, value: Math.round(baseAdult * 0.1) * pax.infants }]
       : []),
     { label: "Taxes & carrier surcharges", value: taxAdult * paxTotal(pax) },
   ];
@@ -45,39 +32,14 @@ export function mealFor(cabin: string) {
 export function fareRulesFor(f: Fare) {
   return {
     refund: f.refundable
-      ? {
-          label: "Refundable",
-          detail:
-            "Cancellation permitted with airline fee. Refund to original payment within 14–21 business days.",
-        }
-      : {
-          label: "Non-refundable",
-          detail: "This fare does not permit refunds. Unused segments have no residual value.",
-        },
+      ? { label: "Refundable", detail: "Cancellation permitted with airline fee. Refund to original payment within 14–21 business days." }
+      : { label: "Non-refundable", detail: "This fare does not permit refunds. Unused segments have no residual value." },
     change: f.refundable
-      ? {
-          label: "Changes allowed",
-          detail:
-            "Date/time changes permitted. Fare difference + change fee applies per passenger.",
-        }
-      : {
-          label: "Changes with fee",
-          detail:
-            "Date changes allowed up to 24h before departure. Fare difference + higher change fee applies.",
-        },
-    noShow: {
-      label: "No-show",
-      detail: "Failure to check in forfeits the fare. Rebooking requires a new ticket.",
-    },
-    carryOn: {
-      label: "Carry-on allowance",
-      detail:
-        "1 piece up to 7 kg. Max dimensions 56 × 36 × 23 cm. Personal item allowed separately.",
-    },
-    checked: {
-      label: "Checked baggage",
-      detail: `${f.baggage} allowance included per passenger. Excess baggage charged at airport rates.`,
-    },
+      ? { label: "Changes allowed", detail: "Date/time changes permitted. Fare difference + change fee applies per passenger." }
+      : { label: "Changes with fee", detail: "Date changes allowed up to 24h before departure. Fare difference + higher change fee applies." },
+    noShow: { label: "No-show", detail: "Failure to check in forfeits the fare. Rebooking requires a new ticket." },
+    carryOn: { label: "Carry-on allowance", detail: "1 piece up to 7 kg. Max dimensions 56 × 36 × 23 cm. Personal item allowed separately." },
+    checked: { label: "Checked baggage", detail: `${f.baggage} allowance included per passenger. Excess baggage charged at airport rates.` },
   };
 }
 
@@ -93,7 +55,7 @@ export function flightFacts(f: Fare) {
   let h = 0;
   for (let i = 0; i < f.id.length; i++) h = (h * 31 + f.id.charCodeAt(i)) >>> 0;
   const discountPct = 6 + (h % 12);
-  const listPrice = Math.round(f.price / (1 - discountPct / 100) / 100) * 100;
+  const listPrice = Math.round((f.price / (1 - discountPct / 100)) / 100) * 100;
   return {
     aircraft: aircraftTypes[h % aircraftTypes.length]!,
     onTime: 78 + (h % 20),

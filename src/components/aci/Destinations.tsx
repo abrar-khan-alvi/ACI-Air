@@ -1,3 +1,4 @@
+import Image from "next/image";
 import bangkok from "@/assets/dest-bangkok.jpg";
 import dubai from "@/assets/dest-dubai.jpg";
 import singapore from "@/assets/dest-singapore.jpg";
@@ -8,13 +9,7 @@ import { SectionHeader } from "./SectionHeader";
 const destinations = [
   { city: "Bangkok", country: "Thailand", price: "৳ 24,900", img: bangkok, tag: "Trending" },
   { city: "Dubai", country: "UAE", price: "৳ 38,400", img: dubai, tag: "Visa on arrival" },
-  {
-    city: "Singapore",
-    country: "Singapore",
-    price: "৳ 41,200",
-    img: singapore,
-    tag: "Family pick",
-  },
+  { city: "Singapore", country: "Singapore", price: "৳ 41,200", img: singapore, tag: "Family pick" },
   { city: "Maldives", country: "Maldives", price: "৳ 52,750", img: maldives, tag: "Honeymoon" },
 ];
 
@@ -32,7 +27,7 @@ export function Destinations() {
             key={d.city}
             className="lift group relative h-40 overflow-hidden rounded-xl shadow-soft sm:h-48"
           >
-            <img
+            <Image
               src={d.img}
               alt={`${d.city}, ${d.country}`}
               width={800}
@@ -40,7 +35,7 @@ export function Destinations() {
               loading="lazy"
               className="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.2_0.05_160/0.9)_0%,oklch(0.2_0.05_160/0.2)_55%,transparent_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.19_0.075_276/0.94)_0%,oklch(0.25_0.08_276/0.22)_55%,transparent_100%)]" />
             <span className="absolute left-2.5 top-2.5 rounded-full bg-card/85 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-primary backdrop-blur">
               {d.tag}
             </span>

@@ -1,49 +1,20 @@
-# Coding Agent Guidelines
+<!-- LOVABLE:BEGIN -->
+> [!IMPORTANT]
+> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
+> published git history — force pushing, or rebasing/amending/squashing commits
+> that are already pushed — as it rewrites history on Lovable's side and the
+> user will likely lose their project history.
+>
+> Commits you push to the connected branch sync back to Lovable and show up in
+> the editor, so keep the branch in a working state.
+<!-- LOVABLE:END -->
 
-This document provides guidance for AI coding assistants working in this repository.
+<!-- BEGIN:nextjs-agent-rules -->
 
-## Project Overview
+# This is NOT the Next.js you know
 
-This is a **TanStack Start** SSR application (not Next.js). Key facts:
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
-- **Package manager**: Bun (`bun.lock` is the lockfile). Always use `bun install`, `bun run dev`, etc.
-- **Framework**: TanStack Start + TanStack Router (file-based routing in `src/routes/`)
-- **Language**: TypeScript (strict mode — see `tsconfig.json`)
-- **Styling**: Tailwind CSS v4 (configured via `@tailwindcss/vite` plugin)
-- **UI library**: Radix UI primitives wrapped in shadcn/ui-style components (`src/components/ui/`)
-- **Business components**: `src/components/aci/` — do not rename or restructure these without strong reason
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
-## Git Rules
-
-- Do **not** force-push, rebase, amend, or squash commits that are already pushed — this rewrites history.
-- Keep the main branch in a working state at all times.
-
-## Coding Rules
-
-- Do not change business logic, UI layout, or component structure without explicit instruction.
-- Do not upgrade dependencies without explicit instruction.
-- Do not rename files or symbols without explicit instruction.
-- Prefer fixing import errors and type errors over restructuring code.
-- Always run `bun x tsc --noEmit` after TypeScript changes to verify no new type errors.
-
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── aci/        # Application-specific business components
-│   └── ui/         # Reusable UI primitives (shadcn/ui pattern)
-├── hooks/          # Custom React hooks
-├── lib/            # Utilities, server functions, data helpers
-├── routes/         # TanStack Router file-based routes
-│   ├── __root.tsx  # Root layout, error boundary, metadata
-│   ├── index.tsx   # Homepage
-│   ├── search.tsx  # Flight search results
-│   ├── booking.tsx # Flight booking flow
-│   ├── hotels.tsx  # Hotel search and results
-│   └── user.tsx    # User profile
-├── router.tsx      # TanStack Router + QueryClient setup
-├── server.ts       # SSR server entry (wraps TanStack Start server)
-├── start.ts        # TanStack Start instance + middleware
-└── styles.css      # Global Tailwind CSS
-```
+<!-- END:nextjs-agent-rules -->

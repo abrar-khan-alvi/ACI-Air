@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
+import { withSearch } from "@/lib/navigation";
 import {
   ArrowRight,
   Ban,
@@ -17,14 +20,8 @@ import {
 } from "lucide-react";
 import type { Place } from "@/lib/airports";
 import { paxLabel, paxTotal, type Pax } from "@/lib/flight-results";
-import {
-  fareBreakdown,
-  fareRulesFor,
-  flightFacts,
-  mealFor,
-  money,
-  type Fare,
-} from "@/lib/fare-details";
+import { fareBreakdown, fareRulesFor, flightFacts, mealFor, money, type Fare } from "@/lib/fare-details";
+import { commissionOf, customerPriceOf, type FareChannel } from "@/lib/fare-channel";
 import { cn } from "@/lib/utils";
 
 export type ItineraryLeg = { fare: Fare; from: Place; to: Place; dates: string; label: string };
@@ -35,10 +32,11 @@ type Props = {
   onClose: () => void;
   pax: Pax;
   cabin: string;
+  channel?: FareChannel;
 };
 
-export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
-  const navigate = useNavigate();
+export function BookingDrawer({ itinerary, open, onClose, pax, cabin, channel = "b2c" }: Props) {
+  const router = useRouter();
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -57,7 +55,8 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
   const first = legs[0];
   const last = legs[legs.length - 1];
   const total = legs.reduce((t, l) => t + l.fare.price, 0);
-  const listTotal = legs.reduce((t, l) => t + flightFacts(l.fare).listPrice, 0);
+  const listTotal = legs.reduce((t, l) => t + (channel === "agent" ? customerPriceOf(l.fare) : flightFacts(l.fare).listPrice), 0);
+  const commissionTotal = legs.reduce((t, l) => t + commissionOf(l.fare), 0);
   const saving = listTotal - total;
   const seatsLeft = legs.length ? Math.min(...legs.map((l) => flightFacts(l.fare).seatsLeft)) : 0;
   const rules = first ? fareRulesFor(first.fare) : null;
@@ -66,19 +65,16 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
     if (!legs.length) return;
     const ref = `aci-booking-${Date.now().toString(36)}`;
     try {
-      sessionStorage.setItem(ref, JSON.stringify({ legs, pax, cabin }));
+      sessionStorage.setItem(ref, JSON.stringify({ legs, pax, cabin, channel }));
     } catch {
       /* storage unavailable */
     }
     onClose();
-    void navigate({ to: "/booking", search: { ref } });
+    router.push(withSearch("/booking", { ref }));
   };
 
   return (
-    <div
-      className={cn("fixed inset-0 z-[60]", open ? "pointer-events-auto" : "pointer-events-none")}
-      aria-hidden={!open}
-    >
+    <div className={cn("fixed inset-0 z-[60]", open ? "pointer-events-auto" : "pointer-events-none")} aria-hidden={!open}>
       <button
         aria-label="Close booking panel"
         onClick={onClose}
@@ -149,9 +145,7 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
                             .toUpperCase()}
                         </span>
                         <span>
-                          <span className="block font-display text-[13.5px] font-semibold">
-                            {fare.airline}
-                          </span>
+                          <span className="block font-display text-[13.5px] font-semibold">{fare.airline}</span>
                           <span className="block text-[11px] text-muted-foreground">
                             {fare.code} · {facts.aircraft}
                           </span>
@@ -164,9 +158,7 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
 
                     <div className="mt-4 flex items-center gap-3">
                       <div className="text-left">
-                        <p className="font-display text-[20px] font-bold leading-none">
-                          {fare.depart}
-                        </p>
+                        <p className="font-display text-[20px] font-bold leading-none">{fare.depart}</p>
                         <p className="mt-1 text-[11px] font-semibold text-muted-foreground">
                           {fare.fromCode} · T{facts.terminalFrom}
                         </p>
@@ -183,9 +175,7 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-display text-[20px] font-bold leading-none">
-                          {fare.arrive}
-                        </p>
+                        <p className="font-display text-[20px] font-bold leading-none">{fare.arrive}</p>
                         <p className="mt-1 text-[11px] font-semibold text-muted-foreground">
                           {fare.toCode} · T{facts.terminalTo}
                         </p>
@@ -222,10 +212,7 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
                     ) : null}
                     <ul className="space-y-2">
                       {fareBreakdown(l.fare, pax).map((r) => (
-                        <li
-                          key={r.label}
-                          className="flex items-center justify-between gap-3 text-[12px]"
-                        >
+                        <li key={r.label} className="flex items-center justify-between gap-3 text-[12px]">
                           <span className="text-muted-foreground">{r.label}</span>
                           <span className="font-semibold">{money(r.value)}</span>
                         </li>
@@ -250,16 +237,11 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
                     { icon: Briefcase, ...rules.carryOn },
                     { icon: Luggage, ...rules.checked },
                   ].map((r) => (
-                    <div
-                      key={r.label}
-                      className="flex items-start gap-2.5 rounded-xl bg-secondary/40 p-2.5"
-                    >
+                    <div key={r.label} className="flex items-start gap-2.5 rounded-xl bg-secondary/40 p-2.5">
                       <r.icon className="mt-0.5 size-3.5 shrink-0 text-primary" />
                       <span>
                         <span className="block text-[12px] font-semibold">{r.label}</span>
-                        <span className="block text-[11px] leading-relaxed text-muted-foreground">
-                          {r.detail}
-                        </span>
+                        <span className="block text-[11px] leading-relaxed text-muted-foreground">{r.detail}</span>
                       </span>
                     </div>
                   ))}
@@ -269,15 +251,8 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
               <section className="rounded-2xl border border-border/60 bg-secondary/40 p-4">
                 <h3 className="font-display text-[13px] font-semibold">What happens next</h3>
                 <ol className="mt-2.5 space-y-1.5">
-                  {[
-                    "Enter traveller details",
-                    "Add seats, bags & meals",
-                    "Secure payment & instant e-ticket",
-                  ].map((s, i) => (
-                    <li
-                      key={s}
-                      className="flex items-center gap-2 text-[11.5px] text-muted-foreground"
-                    >
+                  {["Enter traveller details", "Add seats, bags & meals", "Secure payment & instant e-ticket"].map((s, i) => (
+                    <li key={s} className="flex items-center gap-2 text-[11.5px] text-muted-foreground">
                       <span className="grid size-[18px] place-items-center rounded-full bg-card text-[10px] font-bold text-primary">
                         {i + 1}
                       </span>
@@ -292,13 +267,17 @@ export function BookingDrawer({ itinerary, open, onClose, pax, cabin }: Props) {
               <div className="flex items-end justify-between gap-3">
                 <div>
                   <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                    Total for {paxTotal(pax)} passenger{paxTotal(pax) > 1 ? "s" : ""}
+                    {channel === "agent" ? "Agent fare" : "Total"} for {paxTotal(pax)} passenger{paxTotal(pax) > 1 ? "s" : ""}
                     {legs.length > 1 ? ` · ${legs.length} flights` : ""}
                   </p>
                   <p className="font-display text-[24px] font-bold leading-none">{money(total)}</p>
-                  <p className="mt-1 text-[11px] text-muted-foreground line-through">
-                    {money(listTotal)}
-                  </p>
+                  {channel === "agent" ? (
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      Customer fare {money(listTotal)} · commission {money(commissionTotal)}
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-[11px] text-muted-foreground line-through">{money(listTotal)}</p>
+                  )}
                 </div>
                 <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-[10.5px] font-semibold text-gold-foreground">
                   <Check className="size-3" /> {seatsLeft} seats left

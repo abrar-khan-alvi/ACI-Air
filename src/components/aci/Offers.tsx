@@ -23,19 +23,15 @@ const offers = [
     title: "Free 10kg baggage",
     body: "Extra allowance on selected Gulf routes for Gold members and above.",
     code: "GOLDBAG",
-    className: "bg-sun text-gold-foreground",
-    sub: "text-gold-foreground/70",
+    className: "border border-primary/10 bg-card text-primary",
+    sub: "text-muted-foreground",
   },
 ];
 
 export function Offers() {
   return (
     <section>
-      <SectionHeader
-        title="Best offers"
-        subtitle="Limited-time deals across flights, stays and add-ons."
-        action="All offers"
-      />
+      <SectionHeader title="Best offers" subtitle="Limited-time deals across flights, stays and add-ons." action="All offers" />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {offers.map((o) => (
           <article

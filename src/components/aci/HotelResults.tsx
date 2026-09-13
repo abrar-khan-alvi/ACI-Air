@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import {
   BedDouble,
@@ -11,6 +13,7 @@ import {
   Wifi,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import hotel1 from "@/assets/hotel-1.jpg";
 import hotel2 from "@/assets/hotel-2.jpg";
 import hotel3 from "@/assets/hotel-3.jpg";
@@ -75,12 +78,7 @@ function RoomRow({
           {room.bed} · {room.board}
         </p>
         <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
-          <span
-            className={cn(
-              "font-semibold",
-              room.refundable ? "text-primary" : "text-muted-foreground",
-            )}
-          >
+          <span className={cn("font-semibold", room.refundable ? "text-primary" : "text-muted-foreground")}>
             {room.refundable ? "Free cancellation" : "Non-refundable"}
           </span>
           <span className="text-clay">Only {room.left} left</span>
@@ -123,8 +121,8 @@ function HotelCard({
     <article className="surface-card overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition hover:shadow-float">
       <div className="flex flex-col gap-0 sm:flex-row">
         <div className="relative h-44 shrink-0 sm:h-auto sm:w-56">
-          <img
-            src={images[hotel.imageIndex]}
+          <Image
+            src={images[hotel.imageIndex] ?? hotel1}
             alt={`${hotel.name} in ${hotel.city}`}
             width={1024}
             height={768}
@@ -148,8 +146,7 @@ function HotelCard({
               </span>
             </div>
             <p className="mt-1 flex items-center gap-1 text-[12px] text-muted-foreground">
-              <MapPin className="size-3.5" /> {hotel.area}, {hotel.city} · {hotel.distanceKm} km
-              from centre
+              <MapPin className="size-3.5" /> {hotel.area}, {hotel.city} · {hotel.distanceKm} km from centre
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {hotel.amenities.slice(0, 4).map((a) => (
@@ -196,31 +193,21 @@ function HotelCard({
                 </span>
                 <span className="text-[11.5px] font-semibold">{ratingLabel(hotel.rating)}</span>
               </span>
-              <p className="text-[10.5px] text-muted-foreground">
-                {hotel.reviews.toLocaleString()} reviews
-              </p>
+              <p className="text-[10.5px] text-muted-foreground">{hotel.reviews.toLocaleString()} reviews</p>
             </div>
             <div className="text-right">
               {save > 0 ? (
-                <p className="text-[11px] text-muted-foreground line-through">
-                  {bdt(hotel.strikePerNight)}
-                </p>
+                <p className="text-[11px] text-muted-foreground line-through">{bdt(hotel.strikePerNight)}</p>
               ) : null}
-              <p className="font-display text-[19px] font-bold leading-none">
-                {bdt(hotel.perNight)}
-              </p>
+              <p className="font-display text-[19px] font-bold leading-none">{bdt(hotel.perNight)}</p>
               <p className="text-[10.5px] text-muted-foreground">per night</p>
-              <p className="mt-0.5 text-[11px] font-semibold text-foreground/80">
-                {bdt(total)} total
-              </p>
+              <p className="mt-0.5 text-[11px] font-semibold text-foreground/80">{bdt(total)} total</p>
               <button
                 onClick={() => setOpen((v) => !v)}
                 className="mt-2 inline-flex items-center gap-1 rounded-lg bg-forest px-3.5 py-2 font-display text-[12.5px] font-semibold text-primary-foreground shadow-soft transition-transform hover:scale-[1.03]"
               >
                 {open ? "Hide rooms" : "See rooms"}
-                <ChevronDown
-                  className={cn("size-3.5 transition-transform", open && "rotate-180")}
-                />
+                <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} />
               </button>
             </div>
           </div>
@@ -331,10 +318,7 @@ export function HotelResults({
     else if (sort === "price-desc") sorted.sort((a, b) => b.perNight - a.perNight);
     else if (sort === "rating") sorted.sort((a, b) => b.rating - a.rating);
     else if (sort === "stars") sorted.sort((a, b) => b.stars - a.stars || b.rating - a.rating);
-    else
-      sorted.sort(
-        (a, b) => b.rating * 1000 - b.perNight / 40 - (a.rating * 1000 - a.perNight / 40),
-      );
+    else sorted.sort((a, b) => b.rating * 1000 - b.perNight / 40 - (a.rating * 1000 - a.perNight / 40));
     return sorted;
   }, [all, cap, stars, minRating, types, freeCancel, amen, sort]);
 
@@ -351,10 +335,7 @@ export function HotelResults({
     <div className="surface-card rounded-2xl border border-border/60 bg-card p-3.5 shadow-soft">
       <div className="flex items-center justify-between">
         <p className="font-display text-[13.5px] font-bold">Filters</p>
-        <button
-          onClick={reset}
-          className="text-[11.5px] font-semibold text-primary hover:underline"
-        >
+        <button onClick={reset} className="text-[11.5px] font-semibold text-primary hover:underline">
           Reset
         </button>
       </div>
@@ -380,9 +361,7 @@ export function HotelResults({
           {[5, 4, 3].map((s) => (
             <button
               key={s}
-              onClick={() =>
-                setStars((p) => (p.includes(s) ? p.filter((x) => x !== s) : [...p, s]))
-              }
+              onClick={() => setStars((p) => (p.includes(s) ? p.filter((x) => x !== s) : [...p, s]))}
               className={cn(
                 "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition",
                 stars.includes(s)
@@ -390,10 +369,7 @@ export function HotelResults({
                   : "border-border hover:bg-secondary",
               )}
             >
-              {s}{" "}
-              <Star
-                className={cn("size-3", stars.includes(s) ? "fill-current" : "fill-gold text-gold")}
-              />
+              {s} <Star className={cn("size-3", stars.includes(s) ? "fill-current" : "fill-gold text-gold")} />
             </button>
           ))}
         </div>
@@ -435,11 +411,7 @@ export function HotelResults({
       </Section>
 
       <Section title="Policies">
-        <Toggle
-          on={freeCancel}
-          label="Free cancellation"
-          onClick={() => setFreeCancel((v) => !v)}
-        />
+        <Toggle on={freeCancel} label="Free cancellation" onClick={() => setFreeCancel((v) => !v)} />
       </Section>
 
       <Section title="Facilities">
@@ -474,10 +446,8 @@ export function HotelResults({
       <div className="min-w-0">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-[12.5px] text-muted-foreground">
-            <span className="font-display text-[14px] font-bold text-foreground">
-              {filtered.length}
-            </span>{" "}
-            stays in {dest.city} · {nights} night{nights > 1 ? "s" : ""} · {guests.rooms} room
+            <span className="font-display text-[14px] font-bold text-foreground">{filtered.length}</span> stays in{" "}
+            {dest.city} · {nights} night{nights > 1 ? "s" : ""} · {guests.rooms} room
             {guests.rooms > 1 ? "s" : ""}
           </p>
           <div className="no-scrollbar flex gap-1.5 overflow-x-auto rounded-full bg-secondary/70 p-0.5">
@@ -487,9 +457,7 @@ export function HotelResults({
                 onClick={() => setSort(s.id)}
                 className={cn(
                   "whitespace-nowrap rounded-full px-3 py-1.5 text-[11.5px] font-semibold transition",
-                  sort === s.id
-                    ? "bg-card shadow-soft"
-                    : "text-muted-foreground hover:text-foreground",
+                  sort === s.id ? "bg-card shadow-soft" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {s.label}
@@ -508,23 +476,14 @@ export function HotelResults({
           <div className="surface-card grid place-items-center gap-2 rounded-2xl p-10 text-center">
             <BedDouble className="size-6 text-primary" />
             <p className="font-display text-[15px] font-semibold">No stays match these filters</p>
-            <button
-              onClick={reset}
-              className="text-[12.5px] font-semibold text-primary hover:underline"
-            >
+            <button onClick={reset} className="text-[12.5px] font-semibold text-primary hover:underline">
               Clear all filters
             </button>
           </div>
         ) : (
           <div className="grid gap-3">
             {filtered.map((h) => (
-              <HotelCard
-                key={h.id}
-                hotel={h}
-                nights={nights}
-                rooms={guests.rooms}
-                onSelect={onSelect}
-              />
+              <HotelCard key={h.id} hotel={h} nights={nights} rooms={guests.rooms} onSelect={onSelect} />
             ))}
           </div>
         )}

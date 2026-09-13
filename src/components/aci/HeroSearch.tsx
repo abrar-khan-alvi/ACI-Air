@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Plane,
@@ -12,6 +14,7 @@ import {
   Clock,
   CreditCard,
 } from "lucide-react";
+import Image from "next/image";
 import heroImg from "@/assets/hero-flight.jpg";
 import { cn } from "@/lib/utils";
 import { FlightSearchForm } from "./FlightSearchForm";
@@ -36,9 +39,7 @@ function Field({ icon: Icon, label, value, hint }: FieldProps) {
         <span className="block text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           {label}
         </span>
-        <span className="block truncate font-display text-[13px] font-semibold leading-tight">
-          {value}
-        </span>
+        <span className="block truncate font-display text-[13px] font-semibold leading-tight">{value}</span>
       </span>
       {hint ? <span className="sr-only">{hint}</span> : null}
     </button>
@@ -66,14 +67,15 @@ export function HeroSearch() {
   return (
     <section className="pb-4">
       <div className="relative flex min-h-[240px] flex-col overflow-visible rounded-2xl shadow-card sm:min-h-[270px]">
-        <img
+        <Image
           src={heroImg}
           alt="Aircraft wing above emerald islands and turquoise lagoons"
           width={1920}
           height={1088}
+          priority
           className="absolute inset-0 size-full rounded-2xl object-cover"
         />
-        <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(100deg,oklch(0.22_0.06_160/0.88)_0%,oklch(0.26_0.07_160/0.62)_48%,oklch(0.3_0.06_180/0.12)_100%)]" />
+        <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(100deg,oklch(0.235_0.085_277/0.94)_0%,oklch(0.31_0.105_276/0.7)_48%,oklch(0.69_0.17_23/0.12)_100%)]" />
 
         <div className="relative flex flex-1 flex-col px-4 pt-5 pb-0 sm:px-9 sm:pt-7">
           <div className="pb-4 sm:pb-5">

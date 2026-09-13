@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Building2, MapPin, Plane } from "lucide-react";
 import { searchPlaces, type Place } from "@/lib/airports";
@@ -10,6 +12,7 @@ type Props = {
   exclude?: string | undefined;
   placeholder?: string | undefined;
   compact?: boolean;
+  panel?: boolean;
   onChange: (p: Place) => void;
 };
 
@@ -23,6 +26,7 @@ export function AirportField({
   value,
   exclude,
   placeholder,
+  panel = false,
   onChange,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -51,13 +55,20 @@ export function AirportField({
     <div ref={boxRef} className="relative min-w-0">
       <div
         className={cn(
-          "flex h-12 items-center gap-2 rounded-lg bg-secondary/70 px-3 transition-colors duration-200",
-          open ? "bg-secondary ring-2 ring-primary/30" : "hover:bg-secondary",
+          "flex items-center gap-2 px-3 transition-colors duration-200",
+          panel ? "h-16 bg-card" : "h-12 rounded-lg bg-secondary/70",
+          open
+            ? panel
+              ? "bg-secondary/45 ring-2 ring-inset ring-clay/35"
+              : "bg-secondary ring-2 ring-primary/30"
+            : panel
+              ? "hover:bg-secondary/35"
+              : "hover:bg-secondary",
         )}
       >
-        <Icon className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.9} />
+        <Icon className={cn("size-4 shrink-0", panel ? "text-clay" : "text-muted-foreground")} strokeWidth={1.9} />
         <div className="min-w-0 flex-1">
-          <label className="block text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <label className={cn("block font-semibold text-muted-foreground", panel ? "text-[10px]" : "text-[9.5px] uppercase tracking-[0.14em]")}>
             {label}
           </label>
           <input
@@ -90,7 +101,10 @@ export function AirportField({
                 setOpen(false);
               }
             }}
-            className="w-full truncate bg-transparent font-display text-[13px] font-semibold leading-tight outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
+            className={cn(
+              "w-full truncate bg-transparent font-display font-semibold leading-tight text-foreground outline-none placeholder:font-medium placeholder:text-muted-foreground/70",
+              panel ? "mt-0.5 text-[14px]" : "text-[13px]",
+            )}
           />
         </div>
       </div>
@@ -98,9 +112,7 @@ export function AirportField({
       {open ? (
         <div className="absolute left-0 right-0 top-full z-40 mt-1.5 min-w-[260px] overflow-hidden rounded-xl border border-border/70 bg-popover shadow-float">
           {results.length === 0 ? (
-            <p className="px-3 py-3 text-[12.5px] text-muted-foreground">
-              No airports match “{query}”
-            </p>
+            <p className="px-3 py-3 text-[12.5px] text-muted-foreground">No airports match “{query}”</p>
           ) : (
             <ul className="max-h-72 overflow-y-auto py-1">
               {results.map((p, i) => (

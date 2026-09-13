@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
+import { withSearch } from "@/lib/navigation";
 import { CalendarDays, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { destinationById, nightsBetween, type Guests, type HotelDestination } from "@/lib/hotels";
@@ -31,9 +34,7 @@ function DateField({
       <span className="min-w-0 flex-1">
         <span className="block text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           {label}
-          {hint ? (
-            <span className="ml-1 normal-case tracking-normal text-primary">{hint}</span>
-          ) : null}
+          {hint ? <span className="ml-1 normal-case tracking-normal text-primary">{hint}</span> : null}
         </span>
         <input
           type="date"
@@ -62,15 +63,13 @@ export function HotelSearchForm({
   initialGuests,
   compact = false,
 }: Props) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [dest, setDest] = useState<HotelDestination | null>(
     destinationById(initialDest ?? "bangkok") ?? destinationById("bangkok"),
   );
   const [checkin, setCheckin] = useState(initialCheckin || iso(7));
   const [checkout, setCheckout] = useState(initialCheckout || iso(11));
-  const [guests, setGuests] = useState<Guests>(
-    initialGuests ?? { rooms: 1, adults: 2, children: 0 },
-  );
+  const [guests, setGuests] = useState<Guests>(initialGuests ?? { rooms: 1, adults: 2, children: 0 });
   const [error, setError] = useState<string | null>(null);
 
   const nights = nightsBetween(checkin, checkout);
@@ -80,17 +79,16 @@ export function HotelSearchForm({
     if (!checkin || !checkout) return setError("Pick check-in and check-out dates.");
     if (checkout <= checkin) return setError("Check-out must be after check-in.");
     setError(null);
-    void navigate({
-      to: "/hotels",
-      search: {
+    router.push(
+      withSearch("/hotels", {
         dest: dest.id,
         checkin,
         checkout,
         rooms: guests.rooms,
         adults: guests.adults,
         children: guests.children,
-      },
-    });
+      }),
+    );
   };
 
   return (

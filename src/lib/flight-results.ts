@@ -41,6 +41,10 @@ export type FlightResult = {
   perAdult: number;
   refundable: boolean;
   baggage: string;
+  /** Public (B2C) fare, present only when the fare has been priced for agents. */
+  customerPrice?: number;
+  /** Agent commission percentage applied to the customer fare. */
+  agentPct?: number;
 };
 
 const carriers = [
@@ -97,9 +101,7 @@ export function buildFlightResults(
       (32000 + Math.floor(rand() * 46000) - stops * 6000) * cabinMultiplier[cabin],
     );
     const total =
-      base * pax.adults +
-      Math.round(base * 0.75) * pax.children +
-      Math.round(base * 0.1) * pax.infants;
+      base * pax.adults + Math.round(base * 0.75) * pax.children + Math.round(base * 0.1) * pax.infants;
     return {
       id: `${carrier.code}-${i}`,
       airline: carrier.airline,

@@ -13,10 +13,7 @@ const services = [
 export function Services() {
   return (
     <section>
-      <SectionHeader
-        title="Travel services"
-        subtitle="Everything around the journey, bundled at checkout."
-      />
+      <SectionHeader title="Travel services" subtitle="Everything around the journey, bundled at checkout." />
       <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
         {services.map((s) => (
           <button
@@ -27,9 +24,7 @@ export function Services() {
               <s.icon className="size-4" strokeWidth={1.7} />
             </span>
             <span className="min-w-0">
-              <span className="block truncate font-display text-[13px] font-semibold">
-                {s.title}
-              </span>
+              <span className="block truncate font-display text-[13px] font-semibold">{s.title}</span>
               <span className="block truncate text-[11px] text-muted-foreground">{s.desc}</span>
             </span>
           </button>

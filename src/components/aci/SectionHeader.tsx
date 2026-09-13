@@ -13,7 +13,9 @@ export function SectionHeader({
     <div className="mb-3 flex items-end justify-between gap-3">
       <div>
         <h2 className="font-display text-base font-bold sm:text-[17px]">{title}</h2>
-        {subtitle ? <p className="mt-0.5 text-[12px] text-muted-foreground">{subtitle}</p> : null}
+        {subtitle ? (
+          <p className="mt-0.5 text-[12px] text-muted-foreground">{subtitle}</p>
+        ) : null}
       </div>
       {action ? (
         <button className="hidden shrink-0 items-center gap-1 text-[12px] font-semibold text-primary transition hover:gap-1.5 sm:flex">
