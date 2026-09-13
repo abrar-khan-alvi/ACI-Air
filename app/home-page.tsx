@@ -23,7 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import Image from "next/image";
-import heroAsset from "@/assets/aci-air-world-hero.png.asset.json";
+import heroWorld from "@/assets/aci-air-world-hero.webp";
 import bangkok from "@/assets/dest-bangkok.jpg";
 import dubai from "@/assets/dest-dubai.jpg";
 import singapore from "@/assets/dest-singapore.jpg";
@@ -72,16 +72,23 @@ export function MainHomepage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <section className="relative min-h-[770px] overflow-visible bg-primary text-primary-foreground sm:min-h-[410px] lg:min-h-[448px]">
-        <img
-          src={heroAsset.url}
-          alt="ACI Air traveller overlooking world landmarks as an aircraft flies above"
-          width={1920}
-          height={640}
-          className="absolute inset-0 size-full object-cover object-center"
+        <div className="absolute inset-0 z-0" aria-hidden>
+          <Image
+            src={heroWorld}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
+        <div
+          className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,oklch(0.235_0.085_277/0.98)_0%,oklch(0.235_0.085_277/0.82)_27%,oklch(0.235_0.085_277/0.18)_58%,transparent_100%)]"
+          aria-hidden
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.235_0.085_277/0.98)_0%,oklch(0.235_0.085_277/0.82)_27%,oklch(0.235_0.085_277/0.18)_58%,transparent_100%)]" />
+        <span className="sr-only">ACI Air traveller overlooking world landmarks as an aircraft flies above</span>
 
-        <header className="relative z-20 mx-auto flex h-16 max-w-[1440px] items-center gap-8 px-4 sm:px-7 lg:px-12">
+        <header className="relative z-10 mx-auto flex h-16 max-w-[1440px] items-center gap-8 px-4 sm:px-7 lg:px-12">
           <Brand />
           <nav className="hidden items-center gap-8 lg:flex">
             <a href="#search" className="border-b-2 border-clay py-5 text-[12px] font-semibold">Flights</a>
@@ -192,9 +199,22 @@ export function MainHomepage() {
           </section>
 
           <aside className="relative min-h-56 overflow-hidden rounded-lg bg-primary shadow-card lg:min-h-0">
-            <img src={heroAsset.url} alt="Aircraft wing above the clouds" width={1920} height={640} loading="lazy" className="absolute inset-0 size-full object-cover object-[64%_center]" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.235_0.085_277/0.98)_0%,oklch(0.235_0.085_277/0.2)_75%)]" />
-            <div className="absolute inset-x-0 bottom-0 p-4 text-primary-foreground">
+            <div className="absolute inset-0 z-0" aria-hidden>
+              <Image
+                src={heroWorld}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 360px"
+                loading="lazy"
+                className="object-cover object-[64%_center]"
+              />
+            </div>
+            <div
+              className="absolute inset-0 z-[1] bg-[linear-gradient(to_top,oklch(0.235_0.085_277/0.98)_0%,oklch(0.235_0.085_277/0.2)_75%)]"
+              aria-hidden
+            />
+            <span className="sr-only">Aircraft wing above the clouds</span>
+            <div className="absolute inset-x-0 bottom-0 z-[2] p-4 text-primary-foreground">
               <h2 className="font-display text-[20px] font-bold leading-[1.05]">More journeys.<br />Better moments.</h2>
               <p className="mt-1.5 text-[9px] leading-relaxed text-primary-foreground/80">Exclusive offers, curated destinations and travel inspiration — all in one place.</p>
               <Button type="button" className="mt-3 h-8 bg-clay px-3 text-[10px] text-primary-foreground hover:bg-clay/90">Explore offers <ArrowRight /></Button>
@@ -215,9 +235,19 @@ export function MainHomepage() {
         </section>
 
         <section className="relative mt-3 min-h-20 overflow-hidden rounded-lg bg-secondary">
-          <img src={heroAsset.url} alt="Clouds and ACI Air aircraft" width={1920} height={640} loading="lazy" className="absolute inset-0 size-full object-cover object-[45%_44%] opacity-80" />
+          <div className="absolute inset-0 z-0 opacity-80" aria-hidden>
+            <Image
+              src={heroWorld}
+              alt=""
+              fill
+              sizes="100vw"
+              loading="lazy"
+              className="object-cover object-[45%_44%]"
+            />
+          </div>
+          <span className="sr-only">Clouds and ACI Air aircraft</span>
           <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.88_0.04_245/0.98)_0%,oklch(0.88_0.04_245/0.72)_38%,transparent_72%)]" />
-          <div className="relative p-4 sm:px-6">
+          <div className="relative z-[2] p-4 sm:px-6">
             <h2 className="font-display text-xl font-bold text-primary">Travel smarter with ACI Air</h2>
             <p className="mt-1 text-[10px] text-primary/75">Plan, book and manage your journeys wherever you go.</p>
           </div>

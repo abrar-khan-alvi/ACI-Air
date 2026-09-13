@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image" },
-  icons: { icon: "/favicon.ico" },
+  icons: { icon: "/favicon.png" },
 };
 
 export const viewport: Viewport = {
