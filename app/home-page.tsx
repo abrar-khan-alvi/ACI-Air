@@ -28,6 +28,8 @@ import bangkok from "@/assets/dest-bangkok.jpg";
 import dubai from "@/assets/dest-dubai.jpg";
 import singapore from "@/assets/dest-singapore.jpg";
 import maldives from "@/assets/dest-maldives.jpg";
+import logoImg from "@/assets/logo.webp";
+import logoLightImg from "@/assets/logo-light.png";
 import { HomeSearch } from "@/components/aci/HomeSearch";
 import { Button } from "@/components/ui/button";
 
@@ -54,24 +56,13 @@ const assurances = [
   { icon: WalletCards, title: "Easy payments", body: "Multiple secure methods" },
 ];
 
-function Brand() {
-  return (
-    <Link href="/" className="inline-flex items-end text-primary-foreground" aria-label="ACI Air home">
-      <span className="font-display text-[30px] font-extrabold italic leading-none sm:text-[34px]">ACI</span>
-      <span className="relative -ml-0.5 font-display text-[25px] font-bold italic leading-none sm:text-[28px]">
-        air
-        <span className="absolute -top-1 left-1 h-0.5 w-7 rotate-[-9deg] bg-clay" />
-      </span>
-    </Link>
-  );
-}
 
 export function MainHomepage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <section className="relative min-h-[770px] overflow-visible bg-primary text-primary-foreground sm:min-h-[410px] lg:min-h-[448px]">
+      <section className="relative min-h-[770px] overflow-visible bg-primary text-primary-foreground sm:min-h-[400px] lg:min-h-[400px] xl:min-h-[430px]">
         <div className="absolute inset-0 z-0" aria-hidden>
           <Image
             src={heroWorld}
@@ -88,55 +79,7 @@ export function MainHomepage() {
         />
         <span className="sr-only">ACI Air traveller overlooking world landmarks as an aircraft flies above</span>
 
-        <header className="relative z-10 mx-auto flex h-16 max-w-[1440px] items-center gap-8 px-4 sm:px-7 lg:px-12">
-          <Brand />
-          <nav className="hidden items-center gap-8 lg:flex">
-            <a href="#search" className="border-b-2 border-clay py-5 text-[12px] font-semibold">Flights</a>
-            <a href="#search" className="py-5 text-[12px] font-medium text-primary-foreground/85">Hotels</a>
-            <a href="#search" className="py-5 text-[12px] font-medium text-primary-foreground/85">Packages</a>
-            <a href="#search" className="py-5 text-[12px] font-medium text-primary-foreground/85">Holidays</a>
-            <Link href="/user" className="py-5 text-[12px] font-medium text-primary-foreground/85">Manage booking</Link>
-          </nav>
-          <div className="ml-auto hidden items-center gap-2 sm:flex">
-            <Button variant="ghost" className="h-9 rounded-lg bg-primary/80 px-3 text-[11px] text-primary-foreground hover:bg-primary hover:text-primary-foreground">
-              <Globe2 className="size-4" /> EN <span className="text-primary-foreground/60">⌄</span> বাংলা
-            </Button>
-            <Button asChild variant="secondary" className="h-9 rounded-lg bg-card px-4 text-[11px] text-primary hover:bg-card/90">
-              <Link href="/user"><UserRound className="size-4" /> Sign in</Link>
-            </Button>
-            <Button asChild variant="secondary" className="h-9 rounded-lg bg-card px-4 text-[11px] text-primary hover:bg-card/90">
-              <Link href="/user"><WalletCards className="size-4" /> My wallet</Link>
-            </Button>
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            className="ml-auto text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground lg:hidden"
-          >
-            <Menu />
-          </Button>
-        </header>
-
-        {menuOpen ? (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <Button type="button" variant="ghost" aria-label="Close menu" onClick={() => setMenuOpen(false)} className="absolute inset-0 h-full w-full rounded-none bg-foreground/35" />
-            <aside className="absolute inset-y-0 right-0 w-[280px] bg-card p-5 text-foreground shadow-float">
-              <Button type="button" variant="ghost" size="icon" onClick={() => setMenuOpen(false)} aria-label="Close menu" className="absolute right-3 top-3"><X /></Button>
-              <p className="font-display text-xl font-bold italic text-primary">ACI air</p>
-              <nav className="mt-8 grid gap-1">
-                {["Flights", "Hotels", "Packages", "Holidays", "Manage booking"].map((item) => (
-                  <a key={item} href="#search" onClick={() => setMenuOpen(false)} className="rounded-md px-3 py-3 text-sm font-semibold hover:bg-secondary">{item}</a>
-                ))}
-              </nav>
-              <Button asChild className="mt-5 w-full bg-clay text-primary-foreground hover:bg-clay/90"><Link href="/user">Sign in</Link></Button>
-            </aside>
-          </div>
-        ) : null}
-
-        <div className="relative z-10 mx-auto max-w-[1440px] px-4 pt-4 sm:px-7 sm:pt-7 lg:px-12 lg:pt-6">
+        <div className="relative z-10 flex flex-col pt-24 px-4 sm:px-7 lg:px-12 xl:pt-28 max-w-[1440px] mx-auto">
           <div className="max-w-xl">
             <h1 className="font-display text-[38px] font-extrabold leading-[0.98] sm:text-[48px] lg:text-[55px]">
               Your next journey<br />starts here<span className="text-clay">.</span>
@@ -155,12 +98,12 @@ export function MainHomepage() {
           </p>
         </div>
 
-        <div id="search" className="absolute inset-x-0 top-[285px] z-30 mx-auto max-w-[1370px] px-3 sm:top-[315px] sm:px-7 lg:top-[300px] lg:px-12">
+        <div id="search" className="absolute inset-x-0 top-[310px] z-30 mx-auto max-w-[1370px] px-3 sm:top-[320px] sm:px-7 lg:top-[320px] lg:px-12 xl:top-[350px]">
           <HomeSearch />
         </div>
       </section>
 
-      <main className="mx-auto max-w-[1346px] px-4 pb-8 pt-8 sm:px-7 sm:pt-[185px] lg:px-12 lg:pt-[110px]">
+      <main className="mx-auto max-w-[1346px] px-4 pb-8 pt-8 sm:px-7 sm:pt-[185px] lg:px-12 lg:pt-[140px]">
         <div className="grid min-w-0 gap-5 lg:grid-cols-[1.6fr_.72fr_.5fr]">
           <section className="min-w-0">
             <SectionTitle icon={Plane} title="Popular destinations" subtitle="Explore the world's most loved cities" action="View all" />

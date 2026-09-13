@@ -42,11 +42,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+import { GlobalNavbar } from "@/components/aci/GlobalNavbar";
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${urbanist.variable} ${epilogue.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <GlobalNavbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

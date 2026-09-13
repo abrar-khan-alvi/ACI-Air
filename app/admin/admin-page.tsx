@@ -181,9 +181,9 @@ export function AdminConsole() {
   const badges = { deposits: pendingDeposits, refunds: pendingRefunds, requests: pendingRequests, tickets: openTickets };
 
   return (
-    <div className="min-h-screen bg-secondary/40">
+    <div className="min-h-screen bg-secondary/40 pt-16">
       <div className="lg:grid lg:grid-cols-[248px_1fr]">
-        <SideNav section={section} onGo={go} className="sticky top-0 hidden h-screen lg:flex" badges={badges} openGroups={openGroups} onToggleGroup={toggleGroup} />
+        <SideNav section={section} onGo={go} className="sticky top-16 hidden h-[calc(100vh-4rem)] lg:flex" badges={badges} openGroups={openGroups} onToggleGroup={toggleGroup} />
 
         {menuOpen ? (
           <div className="fixed inset-0 z-50 lg:hidden">
@@ -197,7 +197,7 @@ export function AdminConsole() {
         ) : null}
 
         <div className="min-w-0">
-          <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 border-b border-border/70 bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-6">
+          <header className="sticky top-16 z-30 flex flex-wrap items-center gap-3 border-b border-border/70 bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-6">
             <button onClick={() => setMenuOpen(true)} aria-label="Open menu" className="grid size-9 place-items-center rounded-full border border-border bg-card lg:hidden">
               <Menu className="size-4" />
             </button>

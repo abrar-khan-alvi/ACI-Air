@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import logoImg from "@/assets/logo.webp";
 import { useMemo, useState } from "react";
 import {
   ArrowDownLeft,
@@ -145,14 +147,14 @@ export function PartnerDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/40">
-      <div className="lg:grid lg:grid-cols-[248px_1fr]">
-        <SideNav section={section} onGo={go} className="sticky top-0 hidden h-screen lg:flex" />
+    <div className="min-h-screen bg-secondary/40 pt-16">
+      <div className="lg:grid lg:grid-cols-[212px_1fr]">
+        <SideNav section={section} onGo={go} className="sticky top-16 hidden h-[calc(100vh-4rem)] lg:flex" />
 
         {menuOpen ? (
           <div className="fixed inset-0 z-50 lg:hidden">
             <button aria-label="Close menu" onClick={() => setMenuOpen(false)} className="absolute inset-0 bg-foreground/30 backdrop-blur-sm" />
-            <SideNav section={section} onGo={go} className="absolute inset-y-0 left-0 flex h-full w-[260px] shadow-float">
+            <SideNav section={section} onGo={go} className="absolute inset-y-0 left-0 flex h-full w-[240px] shadow-float">
               <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="absolute right-3 top-3 grid size-8 place-items-center rounded-full bg-secondary">
                 <X className="size-4" />
               </button>
@@ -161,7 +163,7 @@ export function PartnerDashboard() {
         ) : null}
 
         <div className="min-w-0">
-          <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 border-b border-border/70 bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-6">
+          <header className="sticky top-16 z-30 flex flex-wrap items-center gap-3 border-b border-border/70 bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-6">
             <button onClick={() => setMenuOpen(true)} aria-label="Open menu" className="grid size-9 place-items-center rounded-full border border-border bg-card lg:hidden">
               <Menu className="size-4" />
             </button>
@@ -247,43 +249,62 @@ function SideNav({
   className?: string;
   children?: React.ReactNode;
 }) {
+  const core = sections.slice(0, 4);
+  const finance = sections.slice(4, 7);
+  const settings = sections.slice(7);
+
+  const Item = ({ id, label, icon: Icon }: typeof sections[0]) => (
+    <button
+      onClick={() => onGo(id)}
+      className={cn(
+        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+        section === id
+          ? "bg-[#f16b6d] text-white shadow-soft"
+          : "text-sidebar-foreground/75 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
+      )}
+    >
+      <Icon
+        className={cn("size-4", section === id ? "text-white" : "text-sidebar-foreground/55")}
+        strokeWidth={1.8}
+      />
+      {label}
+    </button>
+  );
+
   return (
-    <aside className={cn("z-50 flex flex-col overflow-y-auto border-r border-border/70 bg-background/90 px-3 py-5 backdrop-blur-xl", className)}>
+    <aside className={cn("glass-panel z-50 flex flex-col border-y-0 border-l-0 px-3 py-5", className)}>
       {children}
-      <Link href="/" className="mb-6 flex items-center gap-2.5 px-2" aria-label="ACI Air home">
-        <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground">
-          <Plane className="size-4" strokeWidth={2.2} />
-        </span>
-        <span className="font-display text-[17px] font-extrabold italic text-primary">
-          ACI <span className="font-semibold">air</span>
-        </span>
-      </Link>
-
-      <p className="px-2.5 pb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Partner portal</p>
-      <nav className="space-y-1">
-        {sections.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => onGo(id)}
-            className={cn(
-              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition",
-              section === id ? "bg-primary text-primary-foreground shadow-soft" : "text-foreground/70 hover:bg-secondary",
-            )}
-          >
-            <Icon className={cn("size-4", section === id ? "text-accent" : "text-muted-foreground")} strokeWidth={1.9} />
-            {label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="mt-auto space-y-2 rounded-2xl border border-border bg-card p-3.5">
-        <p className="font-display text-[13px] font-bold text-foreground">Need more credit?</p>
-        <p className="text-[11px] leading-5 text-muted-foreground">Upgrade your agency limit with a quick review from your account manager.</p>
-        <Button size="sm" variant="outline" className="h-8 w-full text-[11px]">Request limit</Button>
+      <div className="flex shrink-0 items-center px-1 mb-6">
+        <Image src={logoImg} alt="ACI Air" height={36} className="h-9 w-auto object-contain" />
       </div>
-      <Link href="/" className="mt-3 flex items-center gap-2 px-3 text-[11px] text-muted-foreground hover:text-primary">
-        <Settings className="size-3.5" /> Back to ACI Air
-      </Link>
+
+      <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden pb-4">
+        <nav className="space-y-0.5">
+          <p className="px-2.5 pb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/45">Core</p>
+          {core.map((s) => <Item key={s.id} {...s} />)}
+        </nav>
+
+        <nav className="mt-5 space-y-0.5">
+          <p className="px-2.5 pb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/45">Finance</p>
+          {finance.map((s) => <Item key={s.id} {...s} />)}
+        </nav>
+
+        <nav className="mt-5 space-y-0.5">
+          <p className="px-2.5 pb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/45">Settings</p>
+          {settings.map((s) => <Item key={s.id} {...s} />)}
+        </nav>
+
+        <div className="mt-auto pt-5">
+          <div className="rounded-xl border border-sidebar-border bg-sidebar-accent/80 p-3">
+            <p className="font-display text-[13px] font-semibold text-sidebar-accent-foreground">Need more credit?</p>
+            <p className="mt-0.5 text-[11px] leading-5 text-sidebar-foreground/65">Upgrade your agency limit with a quick review from your account manager.</p>
+            <Button size="sm" variant="outline" className="mt-2 h-8 w-full text-[11px]">Request limit</Button>
+          </div>
+          <Link href="/" className="mt-3 flex items-center gap-2 px-3 text-[11px] text-sidebar-foreground/75 hover:text-sidebar-accent-foreground">
+            <Settings className="size-3.5" /> Back to ACI Air
+          </Link>
+        </div>
+      </div>
     </aside>
   );
 }
@@ -497,21 +518,21 @@ function Deposit({ onNotice }: { onNotice: (v: string) => void }) {
         <div className="space-y-3">
           {method === "bank"
             ? bankAccounts.map((b) => (
-                <div key={b.account} className="rounded-xl border border-border p-3.5">
-                  <p className="font-display text-[13px] font-bold">{b.bank}</p>
-                  <p className="mt-1 text-[13px] tracking-wide">{b.account}</p>
-                  <p className="text-[11px] text-muted-foreground">{b.name} · {b.branch} branch</p>
-                </div>
-              ))
+              <div key={b.account} className="rounded-xl border border-border p-3.5">
+                <p className="font-display text-[13px] font-bold">{b.bank}</p>
+                <p className="mt-1 text-[13px] tracking-wide">{b.account}</p>
+                <p className="text-[11px] text-muted-foreground">{b.name} · {b.branch} branch</p>
+              </div>
+            ))
             : mfsAccounts.map((m) => (
-                <div key={m.number} className="flex items-center justify-between rounded-xl border border-border p-3.5">
-                  <div>
-                    <p className="font-display text-[13px] font-bold">{m.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{m.type}</p>
-                  </div>
-                  <p className="text-[13px] font-semibold tracking-wide">{m.number}</p>
+              <div key={m.number} className="flex items-center justify-between rounded-xl border border-border p-3.5">
+                <div>
+                  <p className="font-display text-[13px] font-bold">{m.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{m.type}</p>
                 </div>
-              ))}
+                <p className="text-[13px] font-semibold tracking-wide">{m.number}</p>
+              </div>
+            ))}
         </div>
 
         <form

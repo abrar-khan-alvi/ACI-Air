@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { BadgeCheck, Headphones, LockKeyhole, Plane, ShieldCheck } from "lucide-react";
+import { BadgeCheck, Headphones, LockKeyhole, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import heroImg from "@/assets/hero-flight.jpg";
+import logoImg from "@/assets/logo.webp";
+import logoLightImg from "@/assets/logo-light.png";
 
 export function PartnerAuthShell({
   children,
@@ -23,13 +25,15 @@ export function PartnerAuthShell({
         <div className="absolute inset-0 bg-[linear-gradient(145deg,oklch(0.20_0.085_277/0.98)_0%,oklch(0.31_0.105_276/0.88)_56%,oklch(0.69_0.17_23/0.42)_100%)]" />
 
         <div className="relative flex h-full min-h-screen flex-col p-10 xl:p-14">
-          <Link href="/" className="flex w-fit items-center gap-3" aria-label="ACI Air home">
-            <span className="grid size-10 place-items-center rounded-full bg-accent text-primary shadow-soft">
-              <Plane className="size-4.5" strokeWidth={2.2} />
-            </span>
-            <span className="font-display text-[22px] font-extrabold italic">
-              ACI <span className="font-semibold">air</span>
-            </span>
+          <Link href="/" className="flex w-fit items-center" aria-label="ACI Air home">
+            <Image
+              src={logoLightImg}
+              alt="ACI Air"
+              height={42}
+              priority
+              style={{ width: "auto" }}
+              className="h-10 object-contain"
+            />
           </Link>
 
           <div className="my-auto max-w-xl py-16">
@@ -61,11 +65,15 @@ export function PartnerAuthShell({
 
       <section className="flex min-h-screen flex-col">
         <header className="flex items-center justify-between border-b border-border/70 px-5 py-4 sm:px-8 lg:px-10">
-          <Link href="/" className="flex items-center gap-2 lg:hidden" aria-label="ACI Air home">
-            <span className="grid size-9 place-items-center rounded-full bg-accent text-primary">
-              <Plane className="size-4" />
-            </span>
-            <span className="font-display text-lg font-extrabold italic text-primary">ACI air</span>
+          <Link href="/" className="flex items-center lg:hidden" aria-label="ACI Air home">
+            <Image
+              src={logoImg}
+              alt="ACI Air"
+              height={34}
+              priority
+              style={{ width: "auto" }}
+              className="h-8 object-contain"
+            />
           </Link>
           <p className="ml-auto text-[12px] text-muted-foreground">
             {mode === "login" ? "New partner?" : "Already a partner?"}{" "}

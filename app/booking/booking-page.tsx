@@ -148,30 +148,8 @@ export function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="glass-bar sticky top-0 z-40 border-b border-border/60">
-        <div className="mx-auto flex max-w-[1180px] items-center gap-3 px-3 py-2.5 sm:px-5">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-xl bg-lagoon shadow-soft">
-              <Plane className="size-4 text-primary-foreground" strokeWidth={2} />
-            </span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-[14px] font-semibold">ACI Air</span>
-              <span className="block text-[9px] uppercase tracking-[0.18em] text-muted-foreground">Secure booking</span>
-            </span>
-          </Link>
-          <button
-            type="button"
-            onClick={() => (step ? setStep(step - 1) : window.history.back())}
-            className="ml-1 flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-semibold text-muted-foreground transition hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" /> Back
-          </button>
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/70 px-2.5 py-1.5 text-[10.5px] font-semibold text-muted-foreground">
-            <Lock className="size-3 text-primary" /> 256-bit secure
-          </span>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background pt-16">
+
 
       <main className="mx-auto max-w-[1180px] px-3 py-6 sm:px-5">
         <h1 className="font-display text-[22px] font-bold leading-tight sm:text-[26px]">
@@ -224,7 +202,7 @@ export function BookingPage() {
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
                   <Link
-                    href="/user"
+                    href="/partner/user"
                     className="rounded-xl bg-forest px-4 py-2.5 text-[13px] font-semibold text-primary-foreground"
                   >
                     View my trips

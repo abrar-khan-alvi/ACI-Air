@@ -36,8 +36,8 @@ export function PartnerLogin() {
       return;
     }
     setErrors({});
-    setNotice("Opening your partner dashboard (demo preview — real sign-in activates with Lovable Cloud).");
-    router.push("/partner/dashboard");
+    setNotice("Opening your dashboard (demo preview — real sign-in activates with Lovable Cloud).");
+    router.push("/partner/user");
   }
 
   return (

@@ -96,43 +96,8 @@ export function SearchPage() {
     : [];
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="glass-bar sticky top-0 z-40 border-b border-border/60">
-        <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-3 py-2.5 sm:px-5">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-xl bg-lagoon shadow-soft">
-              <Plane className="size-4 text-primary-foreground" strokeWidth={2} />
-            </span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block font-display text-[14px] font-semibold">ACI Air</span>
-              <span className="block text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Flight search
-              </span>
-            </span>
-          </Link>
+    <div className="min-h-screen bg-background pt-16">
 
-          <Link
-            href="/"
-            className="ml-1 flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-semibold text-muted-foreground transition hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" /> Home
-          </Link>
-
-          <div className="ml-auto flex items-center gap-2">
-            <span className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-foreground/80 md:flex">
-              <Globe className="size-3.5 text-primary" /> BDT · EN
-            </span>
-            {params.channel === "agent" ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">
-                <ShieldCheck className="size-3" /> Agent fares
-              </span>
-            ) : null}
-            <span className="hidden items-center gap-1.5 rounded-full border border-border bg-secondary/70 px-2.5 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground md:inline-flex">
-              <Sparkles className="size-3 text-primary" /> Live fare compare
-            </span>
-          </div>
-        </div>
-      </header>
 
       <div className="border-b border-border/60 bg-card">
         <div className="mx-auto max-w-[1240px] px-3 py-3 sm:px-5">

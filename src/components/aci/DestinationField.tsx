@@ -75,7 +75,7 @@ export function DestinationField({ label = "Destination", value, onChange }: Pro
                 }
               } else if (e.key === "Escape") setOpen(false);
             }}
-            className="w-full truncate bg-transparent font-display text-[13px] font-semibold leading-tight outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
+            className="w-full truncate bg-transparent font-display text-[13px] font-semibold text-foreground leading-tight outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
           />
         </div>
       </div>
